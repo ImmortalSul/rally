@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function CompactPlayerCards() {
+export default function CompactPlayerCard2() {
   const players = [
     {
       id: 1,
@@ -310,134 +310,137 @@ export default function CompactPlayerCards() {
                 </div>
               </div>
 
-              {/* Enhanced Stats Section */}
-              <div
-                className="bg-gradient-to-br from-slate-800/80 to-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6 mb-6 cursor-pointer touch-pan-y"
-                onTouchStart={(e) => handleTouchStart(e, player.id)}
-                onTouchEnd={(e) => handleTouchEnd(e, player.id, player.stats)}
-              >
-                {/* Stat Navigation Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <button
-                    onClick={() => prevStat(player.id, player.stats)}
-                    className="w-9 h-9 bg-gradient-to-r from-slate-700/60 to-slate-600/60 hover:from-[#00CED1]/30 hover:to-[#00CED1]/20 rounded-lg flex items-center justify-center transition-all duration-300 border border-slate-600/40 hover:border-[#00CED1]/50"
-                  >
-                    <svg
-                      className="w-5 h-5 text-slate-300 hover:text-[#00CED1] transition-colors"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2.5}
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                  </button>
-
-                  <div className="text-center flex-1 px-4">
-                    <div className="text-slate-200 font-bold text-lg mb-2 tracking-wide">
-                      {currentStat.type}
-                    </div>
-                    <div className="text-[#00CED1] font-black text-4xl tracking-tight drop-shadow-lg">
-                      {currentStat.line}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => nextStat(player.id, player.stats)}
-                    className="w-9 h-9 bg-gradient-to-r from-slate-700/60 to-slate-600/60 hover:from-[#00CED1]/30 hover:to-[#00CED1]/20 rounded-lg flex items-center justify-center transition-all duration-300 border border-slate-600/40 hover:border-[#00CED1]/50"
-                  >
-                    <svg
-                      className="w-5 h-5 text-slate-300 hover:text-[#00CED1] transition-colors"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2.5}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                </div>
-
-                {/* Enhanced Progress Indicators */}
-                <div className="flex justify-center space-x-2">
-                  {player.stats.map((_, index) => (
+              {/* Horizontal Layout with Stats and Buttons */}
+              <div className="flex items-center gap-4">
+                {/* Improved Stats Section */}
+                <div
+                  className="flex-1 bg-gradient-to-br from-slate-800/80 to-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-5 cursor-pointer touch-pan-y"
+                  onTouchStart={(e) => handleTouchStart(e, player.id)}
+                  onTouchEnd={(e) => handleTouchEnd(e, player.id, player.stats)}
+                >
+                  {/* Stat Navigation Header */}
+                  <div className="flex items-center justify-between mb-3">
                     <button
-                      key={index}
-                      onClick={() =>
-                        setCurrentStatIndex((prev) => ({
-                          ...prev,
-                          [player.id]: index,
-                        }))
-                      }
-                      className={`transition-all duration-500 rounded-full ${
-                        index === currentIndex
-                          ? "w-6 h-1.5 bg-gradient-to-r from-[#00CED1] to-[#FFAB91] shadow-lg shadow-[#00CED1]/30"
-                          : "w-1.5 h-1.5 bg-slate-600/60 hover:bg-slate-500/80 hover:scale-150 shadow-md"
-                      }`}
-                    ></button>
-                  ))}
+                      onClick={() => prevStat(player.id, player.stats)}
+                      className="w-8 h-8 bg-gradient-to-r from-slate-700/60 to-slate-600/60 hover:from-[#00CED1]/30 hover:to-[#00CED1]/20 rounded-lg flex items-center justify-center transition-all duration-300 border border-slate-600/40 hover:border-[#00CED1]/50"
+                    >
+                      <svg
+                        className="w-4 h-4 text-slate-300 hover:text-[#00CED1] transition-colors"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M15 19l-7-7 7-7"
+                        />
+                      </svg>
+                    </button>
+
+                    <div className="text-center px-3">
+                      <div className="text-slate-200 font-bold text-base mb-1 tracking-wide">
+                        {currentStat.type}
+                      </div>
+                      <div className="text-[#00CED1] font-black text-3xl tracking-tight drop-shadow-lg">
+                        {currentStat.line}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => nextStat(player.id, player.stats)}
+                      className="w-8 h-8 bg-gradient-to-r from-slate-700/60 to-slate-600/60 hover:from-[#00CED1]/30 hover:to-[#00CED1]/20 rounded-lg flex items-center justify-center transition-all duration-300 border border-slate-600/40 hover:border-[#00CED1]/50"
+                    >
+                      <svg
+                        className="w-4 h-4 text-slate-300 hover:text-[#00CED1] transition-colors"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Enhanced Progress Indicators */}
+                  <div className="flex justify-center space-x-2">
+                    {player.stats.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() =>
+                          setCurrentStatIndex((prev) => ({
+                            ...prev,
+                            [player.id]: index,
+                          }))
+                        }
+                        className={`transition-all duration-500 rounded-full ${
+                          index === currentIndex
+                            ? "w-6 h-1.5 bg-gradient-to-r from-[#00CED1] to-[#FFAB91] shadow-lg shadow-[#00CED1]/30"
+                            : "w-1.5 h-1.5 bg-slate-600/60 hover:bg-slate-500/80 hover:scale-150 shadow-md"
+                        }`}
+                      ></button>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Over/Under Buttons Below Stats */}
-              <div className="grid grid-cols-2 gap-4">
-                <button className="bg-gradient-to-r from-emerald-500/25 to-emerald-600/15 border-2 border-emerald-400/40 rounded-xl py-6 px-8 hover:from-emerald-500/35 hover:to-emerald-600/25 hover:border-emerald-400/60 transition-all duration-300 group shadow-lg hover:shadow-emerald-500/20">
-                  <div className="flex items-center justify-center space-x-3">
-                    <div className="w-8 h-8 bg-emerald-400/20 rounded-xl flex items-center justify-center group-hover:bg-emerald-400/30 transition-colors">
-                      <svg
-                        className="w-6 h-6 text-emerald-400 group-hover:scale-125 transition-transform duration-300"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={3}
-                          d="M5 10l7-7m0 0l7 7m-7-7v18"
-                        />
-                      </svg>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-emerald-400 font-black text-lg tracking-wider">
-                        OVER
+                {/* Over/Under Buttons on Right (Vertical Stack) */}
+                <div className="flex flex-col space-y-3 min-w-[110px] flex-shrink-0">
+                  <button className="bg-gradient-to-r from-emerald-500/25 to-emerald-600/15 border-2 border-emerald-400/40 rounded-xl py-4 px-4 hover:from-emerald-500/35 hover:to-emerald-600/25 hover:border-emerald-400/60 transition-all duration-300 group shadow-lg hover:shadow-emerald-500/20">
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="w-6 h-6 bg-emerald-400/20 rounded-lg flex items-center justify-center group-hover:bg-emerald-400/30 transition-colors">
+                        <svg
+                          className="w-4 h-4 text-emerald-400 group-hover:scale-125 transition-transform duration-300"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M5 10l7-7m0 0l7 7m-7-7v18"
+                          />
+                        </svg>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-emerald-400 font-black text-sm tracking-wider">
+                          OVER
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </button>
+                  </button>
 
-                <button className="bg-gradient-to-r from-red-500/25 to-red-600/15 border-2 border-red-400/40 rounded-xl py-6 px-8 hover:from-red-500/35 hover:to-red-600/25 hover:border-red-400/60 transition-all duration-300 group shadow-lg hover:shadow-red-500/20">
-                  <div className="flex items-center justify-center space-x-3">
-                    <div className="w-8 h-8 bg-red-400/20 rounded-xl flex items-center justify-center group-hover:bg-red-400/30 transition-colors">
-                      <svg
-                        className="w-6 h-6 text-red-400 group-hover:scale-125 transition-transform duration-300"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={3}
-                          d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                        />
-                      </svg>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-red-400 font-black text-lg tracking-wider">
-                        UNDER
+                  <button className="bg-gradient-to-r from-red-500/25 to-red-600/15 border-2 border-red-400/40 rounded-xl py-4 px-4 hover:from-red-500/35 hover:to-red-600/25 hover:border-red-400/60 transition-all duration-300 group shadow-lg hover:shadow-red-500/20">
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center group-hover:bg-red-400/30 transition-colors">
+                        <svg
+                          className="w-4 h-4 text-red-400 group-hover:scale-125 transition-transform duration-300"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                          />
+                        </svg>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-red-400 font-black text-sm tracking-wider">
+                          UNDER
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </button>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

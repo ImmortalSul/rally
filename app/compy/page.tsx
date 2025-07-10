@@ -6,6 +6,7 @@ import StakeControls from "@/components/gambling/stake-controls";
 import CategoryFilters from "@/components/gambling/category-filters";
 import PlayerCards from "@/components/gambling/player-cards";
 import CompactPlayerCards from "@/components/gambling/compact-player-cards";
+import CompactPlayerCard2 from "@/components/gambling/compact-player-card-2";
 import BetSlip from "@/components/gambling/bet-slip";
 import CategoryTabs from "@/components/gambling/category-tabs";
 import LiveScoreboard from "@/components/gambling/live-scoreboard";
@@ -20,7 +21,9 @@ import ChatSocialFeed from "@/components/gambling/chat-social-feed";
 import GameCreation from "@/components/gambling/game-creation";
 import SocialActivityFeed from "@/components/gambling/social-activity-feed-enhanced";
 import LivePlayerDashboard from "@/components/gambling/live-player-dashboard";
-import DynamicBetProgress from "@/components/gambling/dynamic-bet-progress";
+import ParlayProgressTracker from "@/components/gambling/parlay-progress-tracker";
+import OtherPlayersParlays from "@/components/gambling/other-players-parlays";
+import LobbyPicksViewer from "@/components/gambling/lobby-picks-viewer";
 
 export default function ComponentsShowcase() {
   return (
@@ -112,6 +115,21 @@ export default function ComponentsShowcase() {
             </p>
           </div>
           <CompactPlayerCards />
+        </div>
+
+        {/* Compact Player Cards 2 (Horizontal Layout) */}
+        <div className="mb-20">
+          <h2 className="text-3xl font-bold text-white mb-8 flex items-center">
+            <span className="w-8 h-8 bg-gradient-to-r from-[#00CED1] to-[#FFAB91] rounded-full mr-4"></span>
+            Compact Player Cards 2 (Horizontal)
+          </h2>
+          <div className="mb-4">
+            <p className="text-slate-300 text-sm">
+              Horizontal layout variant with stats on left and over/under
+              buttons stacked vertically on the right
+            </p>
+          </div>
+          <CompactPlayerCard2 />
         </div>
 
         {/* Bet Slip and Scoreboard */}
@@ -264,16 +282,93 @@ export default function ComponentsShowcase() {
         <div className="mb-20">
           <h2 className="text-3xl font-bold text-white mb-8 flex items-center">
             <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mr-4"></span>
-            Dynamic Bet Progress
+            Live Parlay Progress Dashboard
           </h2>
-          <div className="mb-4">
-            <p className="text-slate-300 text-sm">
-              Real-time multi-level progress bars showing individual pick
-              performance with opposing directional indicators and target
-              visualization
+          <div className="mb-6">
+            <p className="text-slate-300 text-lg mb-4">
+              Beautiful 3-column parlay dashboard showcasing your friends'
+              weekend action in real-time.
             </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-slate-400">
+              <div>
+                ✨ <strong>Multi-Sport Parlays</strong> - NBA, NFL, and mixed
+                sport betting
+              </div>
+              <div>
+                🔄 <strong>Live Tracking</strong> - Real-time progress with
+                smooth animations
+              </div>
+              <div>
+                📊 <strong>Smart Progress</strong> - Visual indicators for wins,
+                losses, and pending bets
+              </div>
+            </div>
           </div>
-          <DynamicBetProgress />
+          <ParlayProgressTracker />
+        </div>
+      </div>
+
+      {/* Other Players' Parlays Section */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16">
+        <div className="space-y-8">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold text-white">
+              Lobby{" "}
+              <span className="bg-gradient-to-r from-[#00CED1] to-[#FFAB91] bg-clip-text text-transparent">
+                Parlays
+              </span>
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              View other players' parlays in the lobby with live progress
+              tracking
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-400 max-w-2xl mx-auto">
+              <div>
+                👥 <strong>Player Rankings</strong> - See how others are
+                performing
+              </div>
+              <div>
+                📈 <strong>Live Progress</strong> - Real-time bet tracking for
+                all players
+              </div>
+              <div>
+                🎯 <strong>Win Rates</strong> - Historical performance
+                indicators
+              </div>
+            </div>
+          </div>
+          <OtherPlayersParlays />
+        </div>
+      </div>
+
+      {/* Lobby Picks Viewer Section */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16">
+        <div className="space-y-8">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold text-white">
+              Live{" "}
+              <span className="bg-gradient-to-r from-[#00CED1] to-[#FFAB91] bg-clip-text text-transparent">
+                Picks
+              </span>
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              See what everyone in the lobby is betting on with real-time
+              updates
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-400 max-w-2xl mx-auto">
+              <div>
+                🎯 <strong>Individual Picks</strong> - Each player's current
+                bets
+              </div>
+              <div>
+                📱 <strong>Real-time Updates</strong> - Live scores and progress
+              </div>
+              <div>
+                👥 <strong>Social Betting</strong> - Follow the action together
+              </div>
+            </div>
+          </div>
+          <LobbyPicksViewer />
         </div>
       </div>
     </div>
