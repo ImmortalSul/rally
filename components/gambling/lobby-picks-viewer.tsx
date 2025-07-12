@@ -146,6 +146,19 @@ export default function LobbyPicksViewer() {
           athleteImage: "🐸",
           sport: "NFL",
         },
+        {
+          id: 24,
+          player: "Ja Morant",
+          betType: "Assists",
+          target: 8.5,
+          currentValue: 6.0,
+          betDirection: "over",
+          odds: "-115",
+          status: "active",
+          gameTime: "Q3 4:30",
+          athleteImage: "🎪",
+          sport: "NBA",
+        },
       ],
     },
     {
@@ -178,6 +191,32 @@ export default function LobbyPicksViewer() {
           status: "active",
           gameTime: "Q4 6:22",
           athleteImage: "👑",
+          sport: "NFL",
+        },
+        {
+          id: 25,
+          player: "Kevin Durant",
+          betType: "Points",
+          target: 25.5,
+          currentValue: 28.0,
+          betDirection: "over",
+          odds: "+115",
+          status: "won",
+          gameTime: "Final",
+          athleteImage: "🐍",
+          sport: "NBA",
+        },
+        {
+          id: 26,
+          player: "Cooper Kupp",
+          betType: "Receptions",
+          target: 7.5,
+          currentValue: 0,
+          betDirection: "over",
+          odds: "+105",
+          status: "not_started",
+          gameTime: "Sunday 4:25 PM",
+          athleteImage: "🔥",
           sport: "NFL",
         },
       ],
@@ -227,6 +266,19 @@ export default function LobbyPicksViewer() {
           athleteImage: "🐴",
           sport: "NBA",
         },
+        {
+          id: 27,
+          player: "Joel Embiid",
+          betType: "Rebounds",
+          target: 10.5,
+          currentValue: 12.0,
+          betDirection: "over",
+          odds: "-110",
+          status: "won",
+          gameTime: "Final",
+          athleteImage: "🏠",
+          sport: "NBA",
+        },
       ],
     },
     {
@@ -261,6 +313,32 @@ export default function LobbyPicksViewer() {
           athleteImage: "⚡",
           sport: "NFL",
         },
+        {
+          id: 28,
+          player: "Russell Wilson",
+          betType: "Passing TDs",
+          target: 2.5,
+          currentValue: 1.0,
+          betDirection: "over",
+          odds: "+120",
+          status: "active",
+          gameTime: "Q2 8:45",
+          athleteImage: "🎯",
+          sport: "NFL",
+        },
+        {
+          id: 29,
+          player: "Anthony Davis",
+          betType: "Blocks",
+          target: 2.5,
+          currentValue: 4.0,
+          betDirection: "over",
+          odds: "+120",
+          status: "won",
+          gameTime: "Final",
+          athleteImage: "🏠",
+          sport: "NBA",
+        },
       ],
     },
     {
@@ -294,6 +372,32 @@ export default function LobbyPicksViewer() {
           gameTime: "Sunday 4:25 PM",
           athleteImage: "🧙‍♂️",
           sport: "NFL",
+        },
+        {
+          id: 30,
+          player: "Saquon Barkley",
+          betType: "Rushing Yards",
+          target: 85.5,
+          currentValue: 0,
+          betDirection: "over",
+          odds: "-115",
+          status: "not_started",
+          gameTime: "Sunday 1:00 PM",
+          athleteImage: "💫",
+          sport: "NFL",
+        },
+        {
+          id: 31,
+          player: "Devin Booker",
+          betType: "Points",
+          target: 24.5,
+          currentValue: 0,
+          betDirection: "over",
+          odds: "+110",
+          status: "not_started",
+          gameTime: "Tonight 10:30 PM",
+          athleteImage: "☀️",
+          sport: "NBA",
         },
       ],
     },
@@ -424,7 +528,13 @@ export default function LobbyPicksViewer() {
                       ></div>
                     </div>
                     <div>
-                      <h3 className="text-white font-bold text-lg leading-tight">
+                      <h3
+                        className={`text-white font-bold text-lg leading-tight ${
+                          player.name === "Carlos Rodriguez"
+                            ? "sm:truncate sm:max-w-[120px]"
+                            : ""
+                        }`}
+                      >
                         {player.name}
                       </h3>
                       <p className="text-slate-400 text-sm">

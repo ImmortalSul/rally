@@ -319,53 +319,54 @@ export default function CompactPlayerCard2() {
                   onTouchEnd={(e) => handleTouchEnd(e, player.id, player.stats)}
                 >
                   {/* Stat Navigation Header */}
-                  <div className="flex items-center justify-between mb-3">
-                    <button
-                      onClick={() => prevStat(player.id, player.stats)}
-                      className="w-8 h-8 bg-gradient-to-r from-slate-700/60 to-slate-600/60 hover:from-[#00CED1]/30 hover:to-[#00CED1]/20 rounded-lg flex items-center justify-center transition-all duration-300 border border-slate-600/40 hover:border-[#00CED1]/50"
-                    >
-                      <svg
-                        className="w-4 h-4 text-slate-300 hover:text-[#00CED1] transition-colors"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2.5}
-                          d="M15 19l-7-7 7-7"
-                        />
-                      </svg>
-                    </button>
+                  <div className="flex flex-col mb-3">
+                    <div className="text-slate-200 font-bold text-base mb-3 tracking-wide text-center">
+                      {currentStat.type}
+                    </div>
 
-                    <div className="text-center px-3">
-                      <div className="text-slate-200 font-bold text-base mb-1 tracking-wide">
-                        {currentStat.type}
-                      </div>
+                    <div className="flex items-center justify-between">
+                      <button
+                        onClick={() => prevStat(player.id, player.stats)}
+                        className="w-8 h-8 bg-gradient-to-r from-slate-700/60 to-slate-600/60 hover:from-[#00CED1]/30 hover:to-[#00CED1]/20 rounded-lg flex items-center justify-center transition-all duration-300 border border-slate-600/40 hover:border-[#00CED1]/50"
+                      >
+                        <svg
+                          className="w-4 h-4 text-slate-300 hover:text-[#00CED1] transition-colors"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
+                      </button>
+
                       <div className="text-[#00CED1] font-black text-3xl tracking-tight drop-shadow-lg">
                         {currentStat.line}
                       </div>
-                    </div>
 
-                    <button
-                      onClick={() => nextStat(player.id, player.stats)}
-                      className="w-8 h-8 bg-gradient-to-r from-slate-700/60 to-slate-600/60 hover:from-[#00CED1]/30 hover:to-[#00CED1]/20 rounded-lg flex items-center justify-center transition-all duration-300 border border-slate-600/40 hover:border-[#00CED1]/50"
-                    >
-                      <svg
-                        className="w-4 h-4 text-slate-300 hover:text-[#00CED1] transition-colors"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                      <button
+                        onClick={() => nextStat(player.id, player.stats)}
+                        className="w-8 h-8 bg-gradient-to-r from-slate-700/60 to-slate-600/60 hover:from-[#00CED1]/30 hover:to-[#00CED1]/20 rounded-lg flex items-center justify-center transition-all duration-300 border border-slate-600/40 hover:border-[#00CED1]/50"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2.5}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </button>
+                        <svg
+                          className="w-4 h-4 text-slate-300 hover:text-[#00CED1] transition-colors"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
 
                   {/* Enhanced Progress Indicators */}
@@ -390,54 +391,40 @@ export default function CompactPlayerCard2() {
                 </div>
 
                 {/* Over/Under Buttons on Right (Vertical Stack) */}
-                <div className="flex flex-col space-y-3 min-w-[110px] flex-shrink-0">
-                  <button className="bg-gradient-to-r from-emerald-500/25 to-emerald-600/15 border-2 border-emerald-400/40 rounded-xl py-4 px-4 hover:from-emerald-500/35 hover:to-emerald-600/25 hover:border-emerald-400/60 transition-all duration-300 group shadow-lg hover:shadow-emerald-500/20">
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="w-6 h-6 bg-emerald-400/20 rounded-lg flex items-center justify-center group-hover:bg-emerald-400/30 transition-colors">
-                        <svg
-                          className="w-4 h-4 text-emerald-400 group-hover:scale-125 transition-transform duration-300"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={3}
-                            d="M5 10l7-7m0 0l7 7m-7-7v18"
-                          />
-                        </svg>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-emerald-400 font-black text-sm tracking-wider">
-                          OVER
-                        </div>
-                      </div>
+                <div className="flex flex-col space-y-4 min-w-[120px] flex-shrink-0">
+                  <button className="bg-gradient-to-r from-emerald-500/25 to-emerald-600/15 border-2 border-emerald-400/40 rounded-xl py-6 px-8 hover:from-emerald-500/35 hover:to-emerald-600/25 hover:border-emerald-400/60 transition-all duration-300 group shadow-lg hover:shadow-emerald-500/20">
+                    <div className="flex items-center justify-center">
+                      <svg
+                        className="w-8 h-8 text-emerald-400 group-hover:scale-125 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M5 10l7-7m0 0l7 7m-7-7v18"
+                        />
+                      </svg>
                     </div>
                   </button>
 
-                  <button className="bg-gradient-to-r from-red-500/25 to-red-600/15 border-2 border-red-400/40 rounded-xl py-4 px-4 hover:from-red-500/35 hover:to-red-600/25 hover:border-red-400/60 transition-all duration-300 group shadow-lg hover:shadow-red-500/20">
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="w-6 h-6 bg-red-400/20 rounded-lg flex items-center justify-center group-hover:bg-red-400/30 transition-colors">
-                        <svg
-                          className="w-4 h-4 text-red-400 group-hover:scale-125 transition-transform duration-300"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={3}
-                            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                          />
-                        </svg>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-red-400 font-black text-sm tracking-wider">
-                          UNDER
-                        </div>
-                      </div>
+                  <button className="bg-gradient-to-r from-red-500/25 to-red-600/15 border-2 border-red-400/40 rounded-xl py-6 px-8 hover:from-red-500/35 hover:to-red-600/25 hover:border-red-400/60 transition-all duration-300 group shadow-lg hover:shadow-red-500/20">
+                    <div className="flex items-center justify-center">
+                      <svg
+                        className="w-8 h-8 text-red-400 group-hover:scale-125 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                        />
+                      </svg>
                     </div>
                   </button>
                 </div>

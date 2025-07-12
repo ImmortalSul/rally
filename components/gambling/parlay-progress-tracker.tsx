@@ -13,6 +13,7 @@ interface Bet {
   status: "not_started" | "active" | "won" | "lost";
   gameTime: string;
   player: string;
+  finalScore?: string; // Add final score for completed games
 }
 
 interface Parlay {
@@ -56,6 +57,7 @@ export default function ParlayProgressTracker() {
           odds: "-115",
           status: "won",
           gameTime: "Final",
+          finalScore: "W 127-118",
         },
         {
           id: 3,
@@ -110,6 +112,7 @@ export default function ParlayProgressTracker() {
           odds: "+105",
           status: "won",
           gameTime: "Final",
+          finalScore: "W 114-109",
         },
         {
           id: 7,
@@ -121,6 +124,7 @@ export default function ParlayProgressTracker() {
           odds: "-110",
           status: "lost",
           gameTime: "Final",
+          finalScore: "L 102-115",
         },
         {
           id: 8,
@@ -153,6 +157,7 @@ export default function ParlayProgressTracker() {
           odds: "+120",
           status: "won",
           gameTime: "Final",
+          finalScore: "W 31-24",
         },
         {
           id: 10,
@@ -175,6 +180,7 @@ export default function ParlayProgressTracker() {
           odds: "+110",
           status: "won",
           gameTime: "Final",
+          finalScore: "W 28-21",
         },
         {
           id: 12,
@@ -186,6 +192,7 @@ export default function ParlayProgressTracker() {
           odds: "-120",
           status: "lost",
           gameTime: "Final",
+          finalScore: "L 17-30",
         },
       ],
     },
@@ -207,6 +214,7 @@ export default function ParlayProgressTracker() {
           odds: "+115",
           status: "won",
           gameTime: "Final",
+          finalScore: "W 116-103",
         },
         {
           id: 14,
@@ -218,6 +226,7 @@ export default function ParlayProgressTracker() {
           odds: "-110",
           status: "won",
           gameTime: "Final",
+          finalScore: "W 108-95",
         },
         {
           id: 15,
@@ -229,6 +238,7 @@ export default function ParlayProgressTracker() {
           odds: "+125",
           status: "won",
           gameTime: "Final",
+          finalScore: "W 125-119",
         },
       ],
     },
@@ -250,6 +260,7 @@ export default function ParlayProgressTracker() {
           odds: "+110",
           status: "lost",
           gameTime: "Final",
+          finalScore: "L 14-27",
         },
         {
           id: 17,
@@ -261,6 +272,7 @@ export default function ParlayProgressTracker() {
           odds: "-115",
           status: "won",
           gameTime: "Final",
+          finalScore: "W 24-17",
         },
         {
           id: 18,
@@ -272,6 +284,7 @@ export default function ParlayProgressTracker() {
           odds: "+105",
           status: "won",
           gameTime: "Final",
+          finalScore: "W 35-21",
         },
         {
           id: 19,
@@ -283,6 +296,7 @@ export default function ParlayProgressTracker() {
           odds: "-120",
           status: "lost",
           gameTime: "Final",
+          finalScore: "L 20-28",
         },
       ],
     },
@@ -456,6 +470,13 @@ export default function ParlayProgressTracker() {
 
   const getBetStatus = (bet: Bet) => {
     if (bet.status === "not_started") return "Pending";
+
+    // Show final score for completed games (won or lost)
+    if ((bet.status === "won" || bet.status === "lost") && bet.finalScore) {
+      return bet.finalScore;
+    }
+
+    // Fallback for completed games without final score
     if (bet.status === "won") return "Won";
     if (bet.status === "lost") return "Lost";
 
@@ -665,7 +686,7 @@ export default function ParlayProgressTracker() {
 
                           {/* Target label */}
                           <div
-                            className="absolute -top-7 text-xs text-slate-300 font-medium transform -translate-x-1/2 bg-slate-800/80 px-2 py-1 rounded-md border border-slate-600/50"
+                            className="absolute top-3 text-xs text-slate-300 font-medium transform -translate-x-1/2 bg-slate-800/80 px-2 py-1 rounded-md border border-slate-600/50"
                             style={{ left: `${getTargetThresholdPosition()}%` }}
                           >
                             {bet.target}
