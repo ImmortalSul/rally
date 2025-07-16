@@ -5,6 +5,13 @@ import CompactPlayerCard2 from "@/components/gambling/compact-player-card-2";
 import ParlayProgressTracker from "@/components/gambling/parlay-progress-tracker";
 import OtherPlayersParlays from "@/components/gambling/other-players-parlays";
 import LobbyPicksViewer from "@/components/gambling/lobby-picks-viewer";
+import JoinGameComponent from "@/components/gambling/join-game-component";
+import HostGameComponentCompact from "@/components/gambling/host-game-component-compact";
+import HostGameComponent from "@/components/gambling/host-game-component";
+import JoinGameComponentCompact2 from "@/components/gambling/join-game-component-compact-2";
+import JoinGameComponentCompact1 from "@/components/gambling/join-game-component-compact-1";
+import LiveLobbyComponent from "@/components/gambling/live-lobby-component";
+import CompletedGameComponent from "@/components/gambling/completed-game-component";
 
 export default function NewComponentsShowcase() {
   return (
@@ -178,6 +185,119 @@ export default function NewComponentsShowcase() {
             </div>
           </div>
           <LobbyPicksViewer />
+        </div>
+
+        {/* Join Game Component */}
+        <div className="space-y-6">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold text-white">
+              Join Game Component 🎮
+            </h2>
+          </div>
+          <JoinGameComponent />
+        </div>
+        {/* Compact Join Game Components */}
+        <div className="space-y-6 mt-20">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold text-white">
+              Compact Join Game Variations 🎯
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              Two smaller components showcasing different sports and lobby
+              configurations for side-by-side display.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* NFL Component */}
+            <div className="space-y-4">
+              <div className="text-center">
+                <h3 className="text-xl font-semibold text-white">
+                  NFL Monday Night 🏈
+                </h3>
+                <p className="text-slate-400 text-sm">
+                  6-player private lobby • $50 buy-in
+                </p>
+              </div>
+              <JoinGameComponentCompact1 />
+            </div>
+
+            {/* Soccer & Hockey Component */}
+            <div className="space-y-4">
+              <div className="text-center">
+                <h3 className="text-xl font-semibold text-white">
+                  Champions League & NHL ⚽🏒
+                </h3>
+                <p className="text-slate-400 text-sm">
+                  10-player public lobby • $35 buy-in
+                </p>
+              </div>
+              <JoinGameComponentCompact2 />
+            </div>
+          </div>
+        </div>
+
+        {/* Host Game Component */}
+        <div className="space-y-6 mt-20">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold text-white">
+              Host Game Component 🎯
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              Create and manage your own contests with comprehensive settings
+              for buy-in, player limits, contest legs, and bet types.
+            </p>
+          </div>
+          <HostGameComponent />
+        </div>
+
+        {/* Compact Host Game Component */}
+        <div className="space-y-6 mt-20">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold text-white">
+              Compact Host Game Component ⚾🎾
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              Tennis & Baseball themed compact hosting interface with
+              streamlined creation and management features.
+            </p>
+          </div>
+          <div className="max-w-md mx-auto">
+            <HostGameComponentCompact />
+          </div>
+        </div>
+
+        {/* Live Lobby Component */}
+        <div className="space-y-6 mt-20">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold text-white">
+              Live Lobby Component 🔴
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              Real-time game lobby with live updates, player tracking, activity
+              feed, and interactive gameplay management.
+            </p>
+          </div>
+          <div className="w-full">
+            <LiveLobbyComponent />
+          </div>
+        </div>
+
+        {/* Completed Game Component */}
+        <div className="space-y-6 mt-20">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold text-white">
+              Completed Game Component 🏆
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              Post-game results showing final standings, payouts, performance
+              breakdown, and end-game chat with celebration elements for
+              winners.
+            </p>
+          </div>
+          <div className="w-full">
+            <CompletedGameComponent />
+          </div>
         </div>
       </div>
     </div>

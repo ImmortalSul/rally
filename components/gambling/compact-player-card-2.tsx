@@ -391,11 +391,11 @@ export default function CompactPlayerCard2() {
                 </div>
 
                 {/* Over/Under Buttons on Right (Vertical Stack) */}
-                <div className="flex flex-col space-y-4 min-w-[120px] flex-shrink-0">
-                  <button className="bg-gradient-to-r from-emerald-500/25 to-emerald-600/15 border-2 border-emerald-400/40 rounded-xl py-6 px-8 hover:from-emerald-500/35 hover:to-emerald-600/25 hover:border-emerald-400/60 transition-all duration-300 group shadow-lg hover:shadow-emerald-500/20">
+                <div className="flex flex-col space-y-3 min-w-[120px] flex-shrink-0 h-full">
+                  <button className="bg-gradient-to-r from-emerald-500/25 to-emerald-600/15 border-2 border-emerald-400/40 rounded-xl py-5 px-7 hover:from-emerald-500/35 hover:to-emerald-600/25 hover:border-emerald-400/60 transition-all duration-300 group shadow-lg hover:shadow-emerald-500/20 flex-1">
                     <div className="flex items-center justify-center">
                       <svg
-                        className="w-8 h-8 text-emerald-400 group-hover:scale-125 transition-transform duration-300"
+                        className="w-7 h-7 text-emerald-400 group-hover:scale-125 transition-transform duration-300"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -410,10 +410,10 @@ export default function CompactPlayerCard2() {
                     </div>
                   </button>
 
-                  <button className="bg-gradient-to-r from-red-500/25 to-red-600/15 border-2 border-red-400/40 rounded-xl py-6 px-8 hover:from-red-500/35 hover:to-red-600/25 hover:border-red-400/60 transition-all duration-300 group shadow-lg hover:shadow-red-500/20">
+                  <button className="bg-gradient-to-r from-red-500/25 to-red-600/15 border-2 border-red-400/40 rounded-xl py-5 px-7 hover:from-red-500/35 hover:to-red-600/25 hover:border-red-400/60 transition-all duration-300 group shadow-lg hover:shadow-red-500/20 flex-1">
                     <div className="flex items-center justify-center">
                       <svg
-                        className="w-8 h-8 text-red-400 group-hover:scale-125 transition-transform duration-300"
+                        className="w-7 h-7 text-red-400 group-hover:scale-125 transition-transform duration-300"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
