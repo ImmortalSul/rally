@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 
@@ -35,7 +35,7 @@ interface SelectedPick {
   sport: string;
 }
 
-export default function PicksPage() {
+function PicksContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [selectedPicks, setSelectedPicks] = useState<SelectedPick[]>([]);
@@ -1344,5 +1344,27 @@ function AthletePickCard({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PicksPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-800 p-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-700 rounded mb-6"></div>
+              <div className="space-y-4">
+                <div className="h-32 bg-gray-700 rounded"></div>
+                <div className="h-64 bg-gray-700 rounded"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <PicksContent />
+    </Suspense>
   );
 }
