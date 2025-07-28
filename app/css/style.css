@@ -29,6 +29,16 @@
   .animate-float-3s {
     animation: float 4s ease-in-out infinite 3s both;
   }
+
+  /* Hide scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @plugin "@tailwindcss/forms" {

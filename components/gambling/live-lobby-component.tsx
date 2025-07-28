@@ -75,6 +75,29 @@ interface ActivityFeedItem {
   data?: any;
 }
 
+interface AthleteUpdate {
+  id: number;
+  athleteName: string;
+  athleteImage: string;
+  sport: string;
+  updateType:
+    | "score_update"
+    | "milestone"
+    | "quarter_end"
+    | "injury"
+    | "timeout"
+    | "game_status";
+  currentValue: number;
+  previousValue?: number;
+  betType: string;
+  gameTime: string;
+  gameStatus: string;
+  affectedPlayers: string[];
+  isPositive: boolean;
+  timestamp: string;
+  description: string;
+}
+
 export default function LiveLobbyComponent() {
   const [expandedParticipants, setExpandedParticipants] = useState<number[]>(
     []
@@ -82,9 +105,12 @@ export default function LiveLobbyComponent() {
   const [activeTab, setActiveTab] = useState<"my_picks" | "all_players">(
     "my_picks"
   );
-  const [sidebarTab, setSidebarTab] = useState<"live_feed" | "leaderboard">(
-    "live_feed"
-  );
+  const [sidebarTab, setSidebarTab] = useState<
+    "live_feed" | "leaderboard" | "athlete_updates"
+  >("live_feed");
+  const [athleteUpdatesTab, setAthleteUpdatesTab] = useState<
+    "my_picks" | "lobby_picks"
+  >("my_picks");
   const [showAddPickModal, setShowAddPickModal] = useState(false);
 
   // Helper function to toggle participant expansion
@@ -537,6 +563,335 @@ export default function LiveLobbyComponent() {
       avatar: "🎮",
       message: "Lakers vs Celtics game started",
       timestamp: "15 mins ago",
+    },
+  ]);
+
+  // Sample athlete updates data with more live updates
+  const [athleteUpdates] = useState<AthleteUpdate[]>([
+    {
+      id: 1,
+      athleteName: "LeBron James",
+      athleteImage: "👑",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 32,
+      previousValue: 30,
+      betType: "Points",
+      gameTime: "4th Quarter - 2:15",
+      gameStatus: "Live",
+      affectedPlayers: ["Jack Sturt"],
+      isPositive: true,
+      timestamp: "30 seconds ago",
+      description:
+        "🔥 CLUTCH layup and-1! Now at 32 points, crushing the O28.5!",
+    },
+    {
+      id: 2,
+      athleteName: "Jayson Tatum",
+      athleteImage: "☘️",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 21,
+      previousValue: 18,
+      betType: "Points",
+      gameTime: "4th Quarter - 8:42",
+      gameStatus: "Live",
+      affectedPlayers: ["Emma Chen"],
+      isPositive: true,
+      timestamp: "1 min ago",
+      description:
+        "🎯 Back-to-back threes! 5.5 points away from the over O26.5",
+    },
+    {
+      id: 3,
+      athleteName: "Steph Curry",
+      athleteImage: "👨‍🦱",
+      sport: "NBA",
+      updateType: "milestone",
+      currentValue: 6,
+      previousValue: 5,
+      betType: "3-Pointers",
+      gameTime: "4th Quarter - 1:03",
+      gameStatus: "Live",
+      affectedPlayers: ["Jack Sturt"],
+      isPositive: true,
+      timestamp: "2 mins ago",
+      description: "🎯 LOGO THREE! 6th three-pointer secures the O4.5 bet!",
+    },
+    {
+      id: 4,
+      athleteName: "Giannis Antetokounmpo",
+      athleteImage: "🦌",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 13,
+      previousValue: 11,
+      betType: "Rebounds",
+      gameTime: "4th Quarter - 5:20",
+      gameStatus: "Live",
+      affectedPlayers: ["Jack Sturt"],
+      isPositive: true,
+      timestamp: "3 mins ago",
+      description: "💪 Two offensive boards in a row! Just 1.5 away from O11.5",
+    },
+    {
+      id: 5,
+      athleteName: "Damian Lillard",
+      athleteImage: "⏰",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 3,
+      previousValue: 2,
+      betType: "3-Pointers",
+      gameTime: "4th Quarter - 6:15",
+      gameStatus: "Live",
+      affectedPlayers: ["Carlos Rodriguez"],
+      isPositive: true,
+      timestamp: "4 mins ago",
+      description:
+        "⚡ Deep three from Dame! Getting closer to O3.5 - needs 1 more",
+    },
+    {
+      id: 6,
+      athleteName: "Anthony Davis",
+      athleteImage: "🏠",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 3,
+      previousValue: 2,
+      betType: "Blocks",
+      gameTime: "4th Quarter - 7:33",
+      gameStatus: "Live",
+      affectedPlayers: ["Carlos Rodriguez"],
+      isPositive: true,
+      timestamp: "5 mins ago",
+      description: "🚫 REJECTION at the rim! One more block needed for O2.5",
+    },
+    {
+      id: 7,
+      athleteName: "Ja Morant",
+      athleteImage: "🎪",
+      sport: "NBA",
+      updateType: "milestone",
+      currentValue: 11,
+      previousValue: 8,
+      betType: "Assists",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Matt Zimmermann"],
+      isPositive: true,
+      timestamp: "6 mins ago",
+      description: "🎪 THREE assists in 2 minutes! Secured the O8.5 bet!",
+    },
+    {
+      id: 8,
+      athleteName: "Kevin Durant",
+      athleteImage: "🐍",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 28,
+      previousValue: 25,
+      betType: "Points",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Emma Chen"],
+      isPositive: true,
+      timestamp: "8 mins ago",
+      description: "🐍 Ice cold fadeaway jumper sealed the O25.5!",
+    },
+    {
+      id: 9,
+      athleteName: "Russell Westbrook",
+      athleteImage: "⚡",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 8,
+      previousValue: 7,
+      betType: "Assists",
+      gameTime: "3rd Quarter - 11:22",
+      gameStatus: "Live",
+      affectedPlayers: ["Sarah Johnson"],
+      isPositive: true,
+      timestamp: "8 mins ago",
+      description: "⚡ Beautiful dime to teammate! Halfway to O7.5 assists",
+    },
+    {
+      id: 10,
+      athleteName: "Jimmy Butler",
+      athleteImage: "🔥",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 25,
+      previousValue: 22,
+      betType: "Points",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Sarah Johnson"],
+      isPositive: true,
+      timestamp: "10 mins ago",
+      description: "🔥 Tough shot over defender! Secured the O22.5 easily!",
+    },
+    {
+      id: 11,
+      athleteName: "Luka Dončić",
+      athleteImage: "🇸🇮",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 10,
+      previousValue: 8,
+      betType: "Assists",
+      gameTime: "3rd Quarter - 2:45",
+      gameStatus: "Live",
+      affectedPlayers: ["Jack Sturt"],
+      isPositive: true,
+      timestamp: "12 mins ago",
+      description: "🎯 Two no-look passes! Already crushed the O8.5 assists!",
+    },
+    {
+      id: 12,
+      athleteName: "Joel Embiid",
+      athleteImage: "🏠",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 8,
+      previousValue: 7,
+      betType: "Rebounds",
+      gameTime: "3rd Quarter - 0:33",
+      gameStatus: "Live",
+      affectedPlayers: ["Carlos Rodriguez"],
+      isPositive: false,
+      timestamp: "15 mins ago",
+      description:
+        "🏠 Struggling on the boards tonight, needs 2.5 more for O10.5",
+    },
+    {
+      id: 13,
+      athleteName: "Trae Young",
+      athleteImage: "🐍",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 23,
+      previousValue: 19,
+      betType: "Points",
+      gameTime: "3rd Quarter - 4:12",
+      gameStatus: "Live",
+      affectedPlayers: ["Matt Zimmermann"],
+      isPositive: false,
+      timestamp: "18 mins ago",
+      description: "🎯 Quick 4 points but still 2.5 short of O25.5",
+    },
+    {
+      id: 14,
+      athleteName: "Kawhi Leonard",
+      athleteImage: "🤖",
+      sport: "NBA",
+      updateType: "quarter_end",
+      currentValue: 3,
+      previousValue: 3,
+      betType: "Assists",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Emma Chen"],
+      isPositive: false,
+      timestamp: "20 mins ago",
+      description:
+        "🤖 Quiet night distributing, finished well under O5.5 assists",
+    },
+    {
+      id: 15,
+      athleteName: "Donovan Mitchell",
+      athleteImage: "🎯",
+      sport: "NBA",
+      updateType: "milestone",
+      currentValue: 5,
+      previousValue: 3,
+      betType: "3-Pointers",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Matt Zimmermann"],
+      isPositive: true,
+      timestamp: "22 mins ago",
+      description: "🎯 Clutch corner three! Sealed the O3.5 three-pointers!",
+    },
+    {
+      id: 16,
+      athleteName: "Nikola Jokić",
+      athleteImage: "🐴",
+      sport: "NBA",
+      updateType: "milestone",
+      currentValue: 1,
+      previousValue: 0,
+      betType: "Triple-Double",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Emma Chen"],
+      isPositive: true,
+      timestamp: "25 mins ago",
+      description: "🐴 Triple-double achieved! 10th assist completed the feat!",
+    },
+    {
+      id: 17,
+      athleteName: "Pascal Siakam",
+      athleteImage: "🌪️",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 6,
+      previousValue: 5,
+      betType: "Rebounds",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Sarah Johnson"],
+      isPositive: false,
+      timestamp: "28 mins ago",
+      description: "🌪️ Couldn't grab enough boards, finished under O8.5",
+    },
+    {
+      id: 18,
+      athleteName: "Devin Booker",
+      athleteImage: "☀️",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 19,
+      previousValue: 16,
+      betType: "Points",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Carlos Rodriguez"],
+      isPositive: false,
+      timestamp: "30 mins ago",
+      description: "☀️ Late scoring burst but came up short of O24.5 points",
+    },
+    {
+      id: 19,
+      athleteName: "Kyrie Irving",
+      athleteImage: "🎭",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 8,
+      previousValue: 6,
+      betType: "Assists",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Sarah Johnson"],
+      isPositive: true,
+      timestamp: "32 mins ago",
+      description: "🎭 Smooth playmaking all game, easily hit O6.5 assists!",
+    },
+    {
+      id: 20,
+      athleteName: "Zion Williamson",
+      athleteImage: "💪",
+      sport: "NBA",
+      updateType: "score_update",
+      currentValue: 6,
+      previousValue: 4,
+      betType: "Rebounds",
+      gameTime: "Final",
+      gameStatus: "Game Ended",
+      affectedPlayers: ["Matt Zimmermann"],
+      isPositive: false,
+      timestamp: "35 mins ago",
+      description: "💪 Not his usual rebounding night, fell short of O7.5",
     },
   ]);
 
@@ -1045,22 +1400,24 @@ export default function LiveLobbyComponent() {
                 <div className="flex relative">
                   {/* Animated Background Slider */}
                   <div
-                    className={`absolute top-1.5 h-[calc(100%-12px)] bg-gradient-to-r from-emerald-400/80 to-blue-500/80 backdrop-blur-sm rounded-xl transition-all duration-300 ease-out shadow-lg shadow-emerald-400/20 ${
+                    className={`absolute top-1.5 h-[calc(100%-12px)] bg-gradient-to-r from-[#00CED1]/80 to-blue-500/80 backdrop-blur-sm rounded-xl transition-all duration-300 ease-out shadow-lg shadow-[#00CED1]/20 ${
                       sidebarTab === "live_feed"
-                        ? "left-1.5 w-[calc(50%-6px)]"
-                        : "left-[calc(50%+1.5px)] w-[calc(50%-6px)]"
+                        ? "left-1.5 w-[calc(33.33%-4px)]"
+                        : sidebarTab === "leaderboard"
+                          ? "left-[calc(33.33%+1.5px)] w-[calc(33.33%-4px)]"
+                          : "left-[calc(66.66%+1.5px)] w-[calc(33.33%-4px)]"
                     }`}
                   />
 
                   <button
                     onClick={() => setSidebarTab("live_feed")}
-                    className={`relative z-10 flex-1 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ease-out ${
+                    className={`relative z-10 flex-1 px-3 py-3 rounded-xl font-semibold transition-all duration-300 ease-out ${
                       sidebarTab === "live_feed"
                         ? "text-white shadow-lg"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex items-center justify-center gap-1">
                       <div
                         className={`w-2 h-2 rounded-full transition-all duration-300 ${
                           sidebarTab === "live_feed"
@@ -1068,21 +1425,35 @@ export default function LiveLobbyComponent() {
                             : "bg-slate-500"
                         }`}
                       ></div>
-                      <span>Live Feed</span>
+                      <span className="text-xs">Feed</span>
                     </div>
                   </button>
 
                   <button
                     onClick={() => setSidebarTab("leaderboard")}
-                    className={`relative z-10 flex-1 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ease-out ${
+                    className={`relative z-10 flex-1 px-3 py-3 rounded-xl font-semibold transition-all duration-300 ease-out ${
                       sidebarTab === "leaderboard"
                         ? "text-white shadow-lg"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex items-center justify-center gap-1">
                       <span>🏆</span>
-                      <span>Leaderboard</span>
+                      <span className="text-xs">Board</span>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setSidebarTab("athlete_updates")}
+                    className={`relative z-10 flex-1 px-3 py-3 rounded-xl font-semibold transition-all duration-300 ease-out ${
+                      sidebarTab === "athlete_updates"
+                        ? "text-white shadow-lg"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-1">
+                      <span>🏃‍♂️</span>
+                      <span className="text-xs">Athletes</span>
                     </div>
                   </button>
                 </div>
@@ -1176,6 +1547,211 @@ export default function LiveLobbyComponent() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Athlete Updates */}
+            {sidebarTab === "athlete_updates" && (
+              <div className="bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="p-4 border-b border-slate-700/50">
+                  <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                    <span>🏃‍♂️</span>
+                    Athlete Updates
+                  </h3>
+                  <p className="text-slate-400 text-sm">
+                    Live performance tracking
+                  </p>
+
+                  {/* Sub-tabs for My Picks vs Lobby Picks */}
+                  <div className="mt-4">
+                    <div className="relative bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-xl border border-white/10 rounded-xl p-1 shadow-inner">
+                      <div className="flex relative">
+                        {/* Animated Background Slider */}
+                        <div
+                          className={`absolute top-1 h-[calc(100%-8px)] bg-gradient-to-r from-[#00CED1]/60 to-blue-500/60 backdrop-blur-sm rounded-lg transition-all duration-300 ease-out ${
+                            athleteUpdatesTab === "my_picks"
+                              ? "left-1 w-[calc(50%-4px)]"
+                              : "left-[calc(50%+1px)] w-[calc(50%-4px)]"
+                          }`}
+                        />
+
+                        <button
+                          onClick={() => setAthleteUpdatesTab("my_picks")}
+                          className={`relative z-10 flex-1 px-3 py-2 rounded-lg font-medium transition-all duration-300 ease-out text-xs ${
+                            athleteUpdatesTab === "my_picks"
+                              ? "text-white"
+                              : "text-slate-400 hover:text-white"
+                          }`}
+                        >
+                          My Picks
+                        </button>
+
+                        <button
+                          onClick={() => setAthleteUpdatesTab("lobby_picks")}
+                          className={`relative z-10 flex-1 px-3 py-2 rounded-lg font-medium transition-all duration-300 ease-out text-xs ${
+                            athleteUpdatesTab === "lobby_picks"
+                              ? "text-white"
+                              : "text-slate-400 hover:text-white"
+                          }`}
+                        >
+                          Lobby Picks
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="max-h-96 overflow-y-auto">
+                  {athleteUpdatesTab === "my_picks" && (
+                    <div>
+                      {athleteUpdates
+                        .filter(
+                          (update) =>
+                            currentUser &&
+                            update.affectedPlayers.includes(currentUser.name)
+                        )
+                        .map((update) => (
+                          <div
+                            key={update.id}
+                            className="p-4 border-b border-slate-700/30 hover:bg-slate-700/20 transition-all duration-200"
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 backdrop-blur-lg bg-white/10 border border-white/20 rounded-lg flex items-center justify-center text-lg">
+                                {update.athleteImage}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h6 className="text-white font-semibold text-sm">
+                                    {update.athleteName}
+                                  </h6>
+                                  <div
+                                    className={`px-2 py-0.5 rounded text-xs font-medium ${
+                                      update.isPositive
+                                        ? "bg-emerald-400/20 text-emerald-400 border border-emerald-400/30"
+                                        : "bg-red-400/20 text-red-400 border border-red-400/30"
+                                    }`}
+                                  >
+                                    {update.isPositive
+                                      ? "✅ Good"
+                                      : "❌ Behind"}
+                                  </div>
+                                </div>
+                                <p className="text-slate-400 text-xs mb-1">
+                                  {update.betType}: {update.currentValue}
+                                  {update.previousValue &&
+                                    ` (was ${update.previousValue})`}
+                                </p>
+                                <p className="text-slate-300 text-xs mb-2">
+                                  {update.description}
+                                </p>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-slate-500 text-xs">
+                                    {update.gameTime} • {update.timestamp}
+                                  </span>
+                                  <span
+                                    className={`text-xs ${
+                                      update.isPositive
+                                        ? "text-emerald-400"
+                                        : "text-red-400"
+                                    }`}
+                                  >
+                                    {update.sport}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+
+                  {athleteUpdatesTab === "lobby_picks" && (
+                    <div>
+                      {athleteUpdates.map((update) => (
+                        <div
+                          key={update.id}
+                          className="p-4 border-b border-slate-700/30 hover:bg-slate-700/20 transition-all duration-200"
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 backdrop-blur-lg bg-white/10 border border-white/20 rounded-lg flex items-center justify-center text-lg">
+                              {update.athleteImage}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h6 className="text-white font-semibold text-sm">
+                                  {update.athleteName}
+                                </h6>
+                                <div
+                                  className={`px-2 py-0.5 rounded text-xs font-medium ${
+                                    update.isPositive
+                                      ? "bg-emerald-400/20 text-emerald-400 border border-emerald-400/30"
+                                      : "bg-red-400/20 text-red-400 border border-red-400/30"
+                                  }`}
+                                >
+                                  {update.isPositive ? "✅ Hit" : "❌ Miss"}
+                                </div>
+                              </div>
+                              <p className="text-slate-400 text-xs mb-1">
+                                {update.betType}: {update.currentValue}
+                                {update.previousValue &&
+                                  ` (was ${update.previousValue})`}
+                              </p>
+                              <p className="text-slate-300 text-xs mb-2">
+                                {update.description}
+                              </p>
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-slate-500 text-xs">
+                                  {update.gameTime} • {update.timestamp}
+                                </span>
+                                <span
+                                  className={`text-xs ${
+                                    update.isPositive
+                                      ? "text-emerald-400"
+                                      : "text-red-400"
+                                  }`}
+                                >
+                                  {update.sport}
+                                </span>
+                              </div>
+                              {/* Affected Players */}
+                              <div className="flex items-center gap-1 flex-wrap">
+                                <span className="text-slate-500 text-xs">
+                                  Affects:
+                                </span>
+                                {update.affectedPlayers.map(
+                                  (playerName, index) => {
+                                    const player = gameInfo.participants.find(
+                                      (p) => p.name === playerName
+                                    );
+                                    return (
+                                      <div
+                                        key={index}
+                                        className="flex items-center gap-1"
+                                      >
+                                        <div className="w-4 h-4 backdrop-blur-lg bg-white/10 border border-white/20 rounded text-xs flex items-center justify-center">
+                                          {player?.avatar || "👤"}
+                                        </div>
+                                        <span className="text-slate-400 text-xs">
+                                          {playerName}
+                                        </span>
+                                        {index <
+                                          update.affectedPlayers.length - 1 && (
+                                          <span className="text-slate-600 text-xs">
+                                            •
+                                          </span>
+                                        )}
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
