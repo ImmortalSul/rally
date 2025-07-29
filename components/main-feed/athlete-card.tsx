@@ -148,19 +148,36 @@ export default function AthleteCard({
                 <span className="text-slate-300 font-semibold text-sm">
                   {team}
                 </span>
-                <div
-                  className={`px-2 py-1 bg-gradient-to-r ${getPositionColor(
-                    position
-                  )} border rounded text-xs font-bold`}
-                >
-                  {position}
+                <div className="text-slate-400 font-medium text-sm">
+                  {matchup}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Matchup */}
-          <div className="text-slate-400 font-medium text-sm">{matchup}</div>
+          {/* Star Bookmark Button */}
+          <button
+            onClick={() => onBookmarkToggle(id)}
+            className={`p-2 rounded-lg transition-all duration-300 ${
+              isBookmarked
+                ? "text-[#FFAB91] bg-[#FFAB91]/20 border border-[#FFAB91]/40"
+                : "text-slate-400 bg-slate-700/50 border border-slate-600/50 hover:text-[#FFAB91] hover:bg-[#FFAB91]/10 hover:border-[#FFAB91]/30"
+            }`}
+          >
+            <svg
+              className="w-5 h-5"
+              fill={isBookmarked ? "currentColor" : "none"}
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+              />
+            </svg>
+          </button>
         </div>
 
         {/* Horizontal Layout with Stats and Buttons */}
@@ -223,7 +240,7 @@ export default function AthleteCard({
             </div>
 
             {/* Progress Indicators */}
-            <div className="flex justify-center space-x-2 mb-4">
+            <div className="flex justify-center space-x-2">
               {stats.map((_, index) => (
                 <button
                   key={index}
@@ -236,23 +253,11 @@ export default function AthleteCard({
                 ></button>
               ))}
             </div>
-
-            {/* Bookmark Button */}
-            <button
-              onClick={() => onBookmarkToggle(id)}
-              className={`w-full py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                isBookmarked
-                  ? "bg-[#FFAB91]/20 border border-[#FFAB91]/40 text-[#FFAB91]"
-                  : "bg-slate-700/50 border border-slate-600/50 text-slate-400 hover:bg-[#FFAB91]/10 hover:border-[#FFAB91]/30 hover:text-[#FFAB91]"
-              }`}
-            >
-              {isBookmarked ? "Bookmarked" : "Save for Later"}
-            </button>
           </div>
 
           {/* Over/Under Buttons */}
           <div className="flex flex-col space-y-2 min-w-[100px] flex-shrink-0">
-            <button className="bg-gradient-to-r from-emerald-500/25 to-emerald-600/15 border-2 border-emerald-400/40 rounded-xl py-3 px-4 hover:from-emerald-500/35 hover:to-emerald-600/25 hover:border-emerald-400/60 transition-all duration-300 group shadow-lg hover:shadow-emerald-500/20">
+            <button className="bg-gradient-to-r from-emerald-500/25 to-emerald-600/15 border-2 border-emerald-400/40 rounded-xl py-2 px-4 hover:from-emerald-500/35 hover:to-emerald-600/25 hover:border-emerald-400/60 transition-all duration-300 group shadow-lg hover:shadow-emerald-500/20">
               <div className="flex items-center justify-center mb-1">
                 <svg
                   className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform duration-300"
@@ -271,12 +276,9 @@ export default function AthleteCard({
               <div className="text-emerald-300 font-bold text-sm group-hover:text-emerald-200 transition-colors">
                 OVER
               </div>
-              <div className="text-emerald-400 font-semibold text-xs">
-                {currentStat.over}
-              </div>
             </button>
 
-            <button className="bg-gradient-to-r from-red-500/25 to-red-600/15 border-2 border-red-400/40 rounded-xl py-3 px-4 hover:from-red-500/35 hover:to-red-600/25 hover:border-red-400/60 transition-all duration-300 group shadow-lg hover:shadow-red-500/20">
+            <button className="bg-gradient-to-r from-red-500/25 to-red-600/15 border-2 border-red-400/40 rounded-xl py-2 px-4 hover:from-red-500/35 hover:to-red-600/25 hover:border-red-400/60 transition-all duration-300 group shadow-lg hover:shadow-red-500/20">
               <div className="flex items-center justify-center mb-1">
                 <svg
                   className="w-5 h-5 text-red-400 group-hover:scale-110 transition-transform duration-300"
@@ -294,9 +296,6 @@ export default function AthleteCard({
               </div>
               <div className="text-red-300 font-bold text-sm group-hover:text-red-200 transition-colors">
                 UNDER
-              </div>
-              <div className="text-red-400 font-semibold text-xs">
-                {currentStat.under}
               </div>
             </button>
           </div>

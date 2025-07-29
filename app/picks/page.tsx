@@ -43,6 +43,9 @@ function PicksContent() {
   const [bookmarkedAthletes, setBookmarkedAthletes] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
+  const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   // Progressive loading with smooth infinite scroll
   const [displayedAthletes, setDisplayedAthletes] = useState<Athlete[]>([]);
@@ -55,6 +58,7 @@ function PicksContent() {
   const gameId = searchParams.get("gameId") || "1";
   const legsRequired = parseInt(searchParams.get("legs") || "4");
   const buyIn = parseInt(searchParams.get("buyIn") || "25");
+  const gameName = decodeURIComponent(searchParams.get("gameName") || "Game");
 
   // Fix hydration issues
   useEffect(() => {
@@ -706,13 +710,33 @@ function PicksContent() {
   const handleConfirmPicks = () => {
     if (selectedPicks.length !== legsRequired) return;
 
-    setIsConfirming(true);
+    // Show payment popup instead of immediately confirming
+    setShowPaymentPopup(true);
+  };
 
-    // Simulate API call to submit picks
+  const handlePaymentConfirm = () => {
+    setIsPaymentProcessing(true);
+
+    // Simulate payment processing
     setTimeout(() => {
-      // Redirect to profile page with parlays tab active
-      router.push("/profile?tab=parlays");
-    }, 1500);
+      setIsPaymentProcessing(false);
+      setPaymentSuccess(true);
+
+      // Show success animation then redirect
+      setTimeout(() => {
+        setIsConfirming(true);
+        // Redirect to profile page with parlays tab active
+        setTimeout(() => {
+          router.push("/profile?tab=parlays");
+        }, 1500);
+      }, 1500);
+    }, 2000);
+  };
+
+  const handlePaymentCancel = () => {
+    setShowPaymentPopup(false);
+    setIsPaymentProcessing(false);
+    setPaymentSuccess(false);
   };
 
   const handleSportChange = (sportId: string) => {
@@ -946,20 +970,10 @@ function PicksContent() {
         </div>
       </div>
 
-      {/* Bottom Selection Cart - More hovering and less obstructive */}
+      {/* Bottom Selection Cart - More compact and less obstructive */}
       {selectedPicks.length > 0 && (
         <div className="fixed bottom-4 left-4 right-4 z-50 bg-gradient-to-r from-slate-900/80 to-slate-800/80 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-3 shadow-2xl max-w-md mx-auto">
           <div className="flex flex-col space-y-3">
-            {/* Compact Header */}
-            <div className="text-center">
-              <div className="text-white font-bold text-base mb-1 leading-5">
-                {selectedPicks.length}/{legsRequired} Selected
-              </div>
-              <div className="text-slate-400 text-xs leading-4">
-                ~${Math.round(buyIn * 7.2)} potential
-              </div>
-            </div>
-
             {/* Compact Avatar Stack */}
             <div className="flex justify-center space-x-1.5 max-w-full overflow-x-auto pb-1">
               {Array.from({ length: legsRequired }).map((_, index) => {
@@ -1009,7 +1023,7 @@ function PicksContent() {
                   ? "bg-gradient-to-r from-[#00CED1] to-[#FFAB91] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                   : isConfirming
                     ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg"
-                    : "bg-slate-800/50 text-slate-500 cursor-not-allowed"
+                    : "bg-slate-800/50 border border-slate-600/50 text-slate-500 cursor-not-allowed"
               }`}
             >
               {isConfirming ? (
@@ -1023,6 +1037,110 @@ function PicksContent() {
                 `${legsRequired - selectedPicks.length} more`
               )}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Popup */}
+      {showPaymentPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div className="bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 mx-4 w-full max-w-md shadow-2xl">
+            {!paymentSuccess ? (
+              <>
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#00CED1] to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-bold text-xl mb-2">
+                    Confirm Your Entry
+                  </h3>
+                  <p className="text-slate-400 text-sm">
+                    {gameName} • {selectedPicks.length} picks selected
+                  </p>
+                </div>
+
+                <div className="bg-slate-700/30 rounded-xl p-4 mb-6">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-slate-300">Buy-in Amount</span>
+                    <span className="text-white font-bold text-lg">
+                      ${buyIn}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-slate-300">Picks Selected</span>
+                    <span className="text-slate-400">
+                      {selectedPicks.length} of {legsRequired}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Potential Payout</span>
+                    <span className="text-emerald-400 font-bold">
+                      ${Math.round(buyIn * 3.6)}
+                    </span>
+                  </div>
+                </div>
+
+                {!isPaymentProcessing ? (
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handlePaymentCancel}
+                      className="flex-1 bg-slate-700/50 border border-slate-600/50 text-white font-semibold py-3 px-4 rounded-xl hover:bg-slate-600/50 transition-all duration-300"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handlePaymentConfirm}
+                      className="flex-1 bg-gradient-to-r from-[#00CED1] to-blue-500 text-white font-bold py-3 px-4 rounded-xl hover:from-[#00CED1]/90 hover:to-blue-500/90 transition-all duration-300"
+                    >
+                      Pay ${buyIn}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00CED1]"></div>
+                    <span className="ml-3 text-slate-300">
+                      Processing payment...
+                    </span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                  <svg
+                    className="w-8 h-8 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-white font-bold text-xl mb-2">
+                  Payment Successful!
+                </h3>
+                <p className="text-slate-400 text-sm mb-6">
+                  Your picks are locked in. Good luck!
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -1123,21 +1241,36 @@ function AthletePickCard({
                 <span className="text-slate-300 font-semibold text-sm">
                   {athlete.team}
                 </span>
-                <div
-                  className={`px-2 py-1 bg-gradient-to-r ${getPositionColor(
-                    athlete.position
-                  )} border rounded text-xs font-bold`}
-                >
-                  {athlete.position}
+                <div className="text-slate-400 font-medium text-sm">
+                  {athlete.matchup}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Matchup */}
-          <div className="text-slate-400 font-medium text-sm">
-            {athlete.matchup}
-          </div>
+          {/* Star Bookmark Button */}
+          <button
+            onClick={() => onBookmarkToggle(athlete.id)}
+            className={`p-2 rounded-lg transition-all duration-300 ${
+              isBookmarked
+                ? "text-[#FFAB91] bg-[#FFAB91]/20 border border-[#FFAB91]/40"
+                : "text-slate-400 bg-slate-700/50 border border-slate-600/50 hover:text-[#FFAB91] hover:bg-[#FFAB91]/10 hover:border-[#FFAB91]/30"
+            }`}
+          >
+            <svg
+              className="w-5 h-5"
+              fill={isBookmarked ? "currentColor" : "none"}
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+              />
+            </svg>
+          </button>
         </div>
 
         {/* Horizontal Layout with Stats and Buttons */}
@@ -1196,7 +1329,7 @@ function AthletePickCard({
             </div>
 
             {/* Progress Indicators */}
-            <div className="flex justify-center space-x-2 mb-4">
+            <div className="flex justify-center space-x-2">
               {athlete.stats.map((_, index) => (
                 <button
                   key={index}
@@ -1209,18 +1342,6 @@ function AthletePickCard({
                 ></button>
               ))}
             </div>
-
-            {/* Bookmark Button */}
-            <button
-              onClick={() => onBookmarkToggle(athlete.id)}
-              className={`w-full py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                isBookmarked
-                  ? "bg-[#FFAB91]/20 border border-[#FFAB91]/40 text-[#FFAB91]"
-                  : "bg-slate-700/50 border border-slate-600/50 text-slate-400 hover:bg-[#FFAB91]/10 hover:border-[#FFAB91]/30 hover:text-[#FFAB91]"
-              }`}
-            >
-              {isBookmarked ? "Bookmarked" : "Save for Later"}
-            </button>
           </div>
 
           {/* Over/Under Buttons */}
@@ -1230,7 +1351,7 @@ function AthletePickCard({
                 onPickSelection(athlete.id, currentStatIndex, "over")
               }
               disabled={isSelectionDisabled}
-              className={`rounded-xl py-3 px-4 transition-all duration-300 group shadow-lg ${
+              className={`rounded-xl py-2 px-4 transition-all duration-300 group shadow-lg ${
                 isThisStatSelected && selectedPick?.betType === "over"
                   ? "bg-gradient-to-r from-emerald-500/50 to-emerald-600/40 border-2 border-emerald-300 shadow-emerald-500/40"
                   : isSelectionDisabled
@@ -1270,17 +1391,6 @@ function AthletePickCard({
               >
                 OVER
               </div>
-              <div
-                className={`font-semibold text-xs ${
-                  isThisStatSelected && selectedPick?.betType === "over"
-                    ? "text-emerald-300"
-                    : isSelectionDisabled
-                      ? "text-slate-500"
-                      : "text-emerald-400"
-                }`}
-              >
-                {currentStat.over}
-              </div>
             </button>
 
             <button
@@ -1288,7 +1398,7 @@ function AthletePickCard({
                 onPickSelection(athlete.id, currentStatIndex, "under")
               }
               disabled={isSelectionDisabled}
-              className={`rounded-xl py-3 px-4 transition-all duration-300 group shadow-lg ${
+              className={`rounded-xl py-2 px-4 transition-all duration-300 group shadow-lg ${
                 isThisStatSelected && selectedPick?.betType === "under"
                   ? "bg-gradient-to-r from-red-500/50 to-red-600/40 border-2 border-red-300 shadow-red-500/40"
                   : isSelectionDisabled
@@ -1327,17 +1437,6 @@ function AthletePickCard({
                 }`}
               >
                 UNDER
-              </div>
-              <div
-                className={`font-semibold text-xs ${
-                  isThisStatSelected && selectedPick?.betType === "under"
-                    ? "text-red-300"
-                    : isSelectionDisabled
-                      ? "text-slate-500"
-                      : "text-red-400"
-                }`}
-              >
-                {currentStat.under}
               </div>
             </button>
           </div>

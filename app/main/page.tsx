@@ -478,11 +478,33 @@ export default function MainFeedPage() {
                 </span>
                 Popular Lobbies
               </h2>
-              <div className="text-right">
-                <div className="text-[#FFAB91] font-bold text-lg">
-                  {totalActiveLobbies}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => router.push("/create-game")}
+                  className="bg-slate-800/80 hover:bg-slate-700/90 backdrop-blur-md border border-blue-400/30 hover:border-blue-400/50 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-400/20 flex items-center space-x-2 group relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <svg
+                    className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300 relative z-10 text-blue-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  <span className="text-sm relative z-10">Create</span>
+                </button>
+                <div className="text-right">
+                  <div className="text-[#FFAB91] font-bold text-lg">
+                    {totalActiveLobbies}
+                  </div>
+                  <div className="text-slate-400 text-xs">Active</div>
                 </div>
-                <div className="text-slate-400 text-xs">Active</div>
               </div>
             </div>
 
@@ -694,6 +716,26 @@ export default function MainFeedPage() {
                 </span>
                 Popular Lobbies
               </h2>
+              <button
+                onClick={() => router.push("/create-game")}
+                className="bg-slate-800/80 hover:bg-slate-700/90 backdrop-blur-md border border-blue-400/30 hover:border-blue-400/50 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-400/20 flex items-center space-x-2 group relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <svg
+                  className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300 relative z-10 text-blue-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                <span className="relative z-10">Create Lobby</span>
+              </button>
             </div>
 
             <div className="mb-4 flex items-center justify-center">
