@@ -316,9 +316,17 @@ export default function MainFeedPage() {
             <div className="relative profile-dropdown">
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="w-10 h-10 bg-gradient-to-br from-[#00CED1] to-[#FFAB91] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border-2 border-white/20"
+                className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border-2 border-white/20 overflow-hidden bg-slate-800"
               >
-                <span className="text-white font-bold text-sm">MC</span>
+                <img
+                  src="/users/mainuser.png"
+                  alt="Profile"
+                  className="w-10 h-10 object-cover rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=Main+User&background=0D8ABC&color=fff&size=128`;
+                  }}
+                />
               </button>
 
               {/* Dropdown Menu */}

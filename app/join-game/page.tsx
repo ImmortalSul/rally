@@ -750,8 +750,22 @@ function JoinGameContent() {
           <div className="bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-md rounded-2xl border border-slate-700/50 p-6 shadow-2xl">
             <div className="flex items-center gap-4 mb-6">
               <div className="relative">
-                <div className="w-16 h-16 backdrop-blur-lg bg-white/10 border border-white/20 rounded-xl flex items-center justify-center text-3xl shadow-xl">
-                  {gameInfo.hostAvatar}
+                <div className="w-16 h-16 backdrop-blur-lg bg-white/10 border border-white/20 rounded-xl flex items-center justify-center shadow-xl overflow-hidden">
+                  {gameInfo.hostName ? (
+                    <img
+                      src={`/users/${gameInfo.hostName.toLowerCase().replace(/\s+/g, "-")}.png`}
+                      alt={gameInfo.hostName}
+                      className="w-16 h-16 object-cover rounded-xl"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(gameInfo.hostName)}&background=0D8ABC&color=fff&size=128`;
+                      }}
+                    />
+                  ) : (
+                    <span className="text-white font-bold text-3xl">
+                      {gameInfo.hostAvatar}
+                    </span>
+                  )}
                 </div>
                 <div className="absolute -bottom-1 -right-1 text-lg shadow-lg">
                   👑
@@ -874,8 +888,22 @@ function JoinGameContent() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <div className="relative">
-                          <div className="w-14 h-14 backdrop-blur-lg bg-white/10 border border-white/20 rounded-xl flex items-center justify-center text-2xl shadow-xl">
-                            {participant.avatar}
+                          <div className="w-14 h-14 backdrop-blur-lg bg-white/10 border border-white/20 rounded-xl flex items-center justify-center shadow-xl overflow-hidden">
+                            {participant.name ? (
+                              <img
+                                src={`/users/${participant.name.toLowerCase().replace(/\s+/g, "-")}.png`}
+                                alt={participant.name}
+                                className="w-14 h-14 object-cover rounded-xl"
+                                onError={(e) => {
+                                  e.currentTarget.onerror = null;
+                                  e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}&background=0D8ABC&color=fff&size=128`;
+                                }}
+                              />
+                            ) : (
+                              <span className="text-white font-bold text-2xl">
+                                {participant.avatar}
+                              </span>
+                            )}
                           </div>
                           <div
                             className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-slate-800 ${
@@ -960,8 +988,22 @@ function JoinGameContent() {
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
-                              <div className="w-10 h-10 backdrop-blur-lg bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-lg">
-                                {pick.athleteImage}
+                              <div className="w-10 h-10 backdrop-blur-lg bg-white/5 border border-white/10 rounded-lg flex items-center justify-center overflow-hidden">
+                                {pick.player ? (
+                                  <img
+                                    src={`/players/${pick.player.toLowerCase().replace(/\s+/g, "-")}.png`}
+                                    alt={pick.player}
+                                    className="w-10 h-10 object-cover rounded-lg"
+                                    onError={(e) => {
+                                      e.currentTarget.onerror = null;
+                                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(pick.player)}&background=0D8ABC&color=fff&size=128`;
+                                    }}
+                                  />
+                                ) : (
+                                  <span className="text-white font-bold text-lg">
+                                    {pick.athleteImage}
+                                  </span>
+                                )}
                               </div>
                               <div className="min-w-0">
                                 <h6 className="text-white font-semibold text-sm leading-tight truncate">

@@ -623,10 +623,16 @@ export default function AthleteProfilePopup({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 sm:gap-4 lg:gap-6">
               <div className="relative">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-[#00CED1] to-[#FFAB91] rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl">
-                  <span className="text-white font-bold text-sm sm:text-lg lg:text-2xl">
-                    {athlete.avatar}
-                  </span>
+                <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl overflow-hidden">
+                  <img
+                    src={`/players/${athlete.fullName.toLowerCase().replace(/\s+/g, "-")}.png`}
+                    alt={athlete.fullName}
+                    className="w-full h-full object-cover rounded-xl sm:rounded-2xl"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(athlete.fullName)}&background=0D8ABC&color=fff&size=128`;
+                    }}
+                  />
                 </div>
                 <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 rounded-full border-2 sm:border-3 border-slate-800 bg-emerald-400"></div>
               </div>

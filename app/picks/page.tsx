@@ -1225,9 +1225,21 @@ function AthletePickCard({
             {/* Player Avatar */}
             <div className="relative flex-shrink-0">
               <div className="w-14 h-14 backdrop-blur-lg bg-white/10 border border-white/20 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg tracking-tight">
-                  {athlete.avatar}
-                </span>
+                {athlete.name ? (
+                  <img
+                    src={`/players/${athlete.name.toLowerCase().replace(/\s+/g, "-")}.png`}
+                    alt={athlete.name}
+                    className="w-12 h-12 object-cover rounded-lg"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(athlete.name)}&background=0D8ABC&color=fff&size=128`;
+                    }}
+                  />
+                ) : (
+                  <span className="text-white font-bold text-lg tracking-tight">
+                    {athlete.avatar}
+                  </span>
+                )}
               </div>
               <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full border-2 border-slate-800 bg-emerald-500"></div>
             </div>

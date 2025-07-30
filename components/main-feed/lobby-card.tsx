@@ -46,8 +46,22 @@ export default function LobbyCard({
       <div className="relative z-10 h-full flex flex-col">
         {/* Host Info Header */}
         <div className="flex items-center space-x-3 mb-6">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#00CED1] to-[#FFAB91] rounded-full flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-sm">{host.avatar}</span>
+          <div className="w-12 h-12 bg-gradient-to-br from-[#00CED1] to-[#FFAB91] rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+            {host.name ? (
+              <img
+                src={`/users/${host.name.toLowerCase().replace(/\s+/g, "-")}.png`}
+                alt={host.name}
+                className="w-12 h-12 object-cover rounded-full"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(host.name)}&background=0D8ABC&color=fff&size=128`;
+                }}
+              />
+            ) : (
+              <span className="text-white font-bold text-sm">
+                {host.avatar}
+              </span>
+            )}
           </div>
           <div className="flex-1">
             <div className="flex items-center space-x-2 mb-1">
