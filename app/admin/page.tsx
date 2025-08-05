@@ -829,21 +829,7 @@ function AdminPageContent() {
                     return matchesSearch && matchesSport;
                   }).length === 0 && (
                     <div className="text-center py-8">
-                      <div className="text-slate-400 mb-2">
-                        <svg
-                          className="w-12 h-12 mx-auto"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1}
-                            d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.467.901-6.056 2.37l-.413-.387L5.5 17l.031-.029A7.718 7.718 0 0112 13.5c2.34 0 4.467.901 6.056 2.37l-.413.387L17.5 16l.031.029z"
-                          />
-                        </svg>
-                      </div>
+                      <div className="text-slate-400 mb-2"></div>
                       <p className="text-slate-400">
                         No stat types found matching your criteria
                       </p>
