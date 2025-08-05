@@ -272,6 +272,26 @@ function AdminPageContent() {
     resolutionReason: "",
   });
 
+  // Wallet connection state
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+
+  // Wallet connection handler
+  const handleConnectWallet = () => {
+    if (walletConnected) {
+      // Disconnect wallet
+      setWalletConnected(false);
+      setWalletAddress("");
+      addToast("Wallet disconnected", "success");
+    } else {
+      // Simulate wallet connection (in real app, this would call actual wallet)
+      const mockAddress = "idk bro tbh i made this shit up";
+      setWalletConnected(true);
+      setWalletAddress(mockAddress);
+      addToast("Wallet connected successfully!", "success");
+    }
+  };
+
   // Helper functions
   const generateNextLineCode = (sportCode: string): string => {
     const existingLines = statTypes.filter((st) => st.sportCode === sportCode);
@@ -297,7 +317,7 @@ function AdminPageContent() {
 
     // If manual numerical code is provided, validate and parse it
     if (newStatType.numId.trim()) {
-      const parts = newStatType.numId.split('-');
+      const parts = newStatType.numId.split("-");
       if (parts.length !== 2) {
         addToast("Numerical code must be in format: 00001-00001", "error");
         return;
@@ -569,7 +589,70 @@ function AdminPageContent() {
 
           {/* Right: Status or Info */}
           <div className="flex items-center space-x-3">
-            <div className="bg-gradient-to-r from-[#00CED1]/20 to-[#FFAB91]/20 border border-[#00CED1]/30 rounded-xl px-4 py-2 backdrop-blur-sm">
+            {/* Connect Wallet Button */}
+            <button
+              onClick={handleConnectWallet}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-xl border transition-all duration-300 backdrop-blur-sm ${
+                walletConnected
+                  ? "bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-green-500/30 hover:from-green-500/30 hover:to-emerald-500/30"
+                  : "bg-gradient-to-r from-[#00CED1]/20 to-[#FFAB91]/20 border-[#00CED1]/30 hover:from-[#00CED1]/30 hover:to-[#FFAB91]/30"
+              }`}
+            >
+              <div
+                className={`w-5 h-5 rounded-lg flex items-center justify-center ${
+                  walletConnected
+                    ? "bg-gradient-to-br from-green-500 to-emerald-500"
+                    : "bg-gradient-to-br from-[#00CED1] to-[#FFAB91]"
+                }`}
+              >
+                {walletConnected ? (
+                  <svg
+                    className="w-3 h-3 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                )}
+              </div>
+              <div className="text-left">
+                <span
+                  className={`font-bold text-sm ${
+                    walletConnected
+                      ? "bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent"
+                      : "bg-gradient-to-r from-[#00CED1] to-[#FFAB91] bg-clip-text text-transparent"
+                  }`}
+                >
+                  {walletConnected ? "Connected" : "Connect Wallet"}
+                </span>
+                {walletConnected && (
+                  <div className="text-xs text-slate-400 font-mono">
+                    {walletAddress}
+                  </div>
+                )}
+              </div>
+            </button>
+
+            {/* Admin Access Indicator */}
+            {/* <div className="bg-gradient-to-r from-[#00CED1]/20 to-[#FFAB91]/20 border border-[#00CED1]/30 rounded-xl px-4 py-2 backdrop-blur-sm">
               <div className="flex items-center space-x-2">
                 <div className="w-5 h-5 bg-gradient-to-br from-[#00CED1] to-[#FFAB91] rounded-lg flex items-center justify-center">
                   <svg
@@ -588,7 +671,7 @@ function AdminPageContent() {
                   Admin Access
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -674,13 +757,17 @@ function AdminPageContent() {
                       type="text"
                       value={newStatType.numId}
                       onChange={(e) =>
-                        setNewStatType({ ...newStatType, numId: e.target.value })
+                        setNewStatType({
+                          ...newStatType,
+                          numId: e.target.value,
+                        })
                       }
                       placeholder="e.g., 00001-00001"
                       className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all font-mono"
                     />
                     <p className="text-slate-400 text-xs mt-1">
-                      Enter the specific numerical ID (e.g., 00001-00001) or leave blank to auto-generate
+                      Enter the specific numerical ID (e.g., 00001-00001) or
+                      leave blank to auto-generate
                     </p>
                   </div>
 
