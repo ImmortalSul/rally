@@ -3,6 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ToastProvider, useToast } from "../../components/ui/toast";
+import {
+  Dropdown,
+  SportsDropdown,
+  DropdownOption,
+} from "../../components/ui/dropdown";
 
 // Types for the admin panel
 interface StatType {
@@ -668,18 +673,12 @@ function AdminPageContent() {
                   </div>
 
                   <div>
-                    <select
+                    <SportsDropdown
                       value={selectedSport}
-                      onChange={(e) => setSelectedSport(e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
-                    >
-                      <option value="all">All Sports</option>
-                      {sports.map((sport) => (
-                        <option key={sport.name} value={sport.name}>
-                          {sport.icon} {sport.name}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={setSelectedSport}
+                      includeAll={true}
+                      placeholder="Filter by sport"
+                    />
                   </div>
                 </div>
 
@@ -873,20 +872,14 @@ function AdminPageContent() {
                     <label className="block text-white font-semibold mb-2">
                       Sport
                     </label>
-                    <select
+                    <SportsDropdown
                       value={newPlayer.sport}
-                      onChange={(e) =>
-                        setNewPlayer({ ...newPlayer, sport: e.target.value })
+                      onChange={(value) =>
+                        setNewPlayer({ ...newPlayer, sport: value })
                       }
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
-                    >
-                      <option value="">Select Sport</option>
-                      {sports.map((sport) => (
-                        <option key={sport.name} value={sport.name}>
-                          {sport.icon} {sport.name}
-                        </option>
-                      ))}
-                    </select>
+                      includeAll={false}
+                      placeholder="Select Sport"
+                    />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -1013,50 +1006,59 @@ function AdminPageContent() {
                     <label className="block text-white font-semibold mb-2">
                       Select Player
                     </label>
-                    <select
+                    <Dropdown
                       value={newLine.playerId}
-                      onChange={(e) =>
-                        setNewLine({ ...newLine, playerId: e.target.value })
+                      onChange={(value) =>
+                        setNewLine({ ...newLine, playerId: value })
                       }
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
-                    >
-                      <option value="">Select a player</option>
-                      {players.map((player) => (
-                        <option key={player.id} value={player.id}>
-                          {sports.find((s) => s.name === player.sport)?.icon}{" "}
-                          {player.name} ({player.team})
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="Select a player"
+                      options={[
+                        { value: "", label: "Select a player", disabled: true },
+                        ...players.map((player) => ({
+                          value: player.id,
+                          label: `${player.name} (${player.team})`,
+                          icon: sports.find((s) => s.name === player.sport)
+                            ?.icon,
+                        })),
+                      ]}
+                      searchable={true}
+                    />
                   </div>
 
                   <div>
                     <label className="block text-white font-semibold mb-2">
                       Select Stat Type
                     </label>
-                    <select
+                    <Dropdown
                       value={newLine.statTypeId}
-                      onChange={(e) =>
-                        setNewLine({ ...newLine, statTypeId: e.target.value })
+                      onChange={(value) =>
+                        setNewLine({ ...newLine, statTypeId: value })
                       }
-                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
-                    >
-                      <option value="">Select stat type</option>
-                      {statTypes
-                        .filter((st) => {
-                          const selectedPlayer = players.find(
-                            (p) => p.id === newLine.playerId
-                          );
-                          return (
-                            !selectedPlayer || st.sport === selectedPlayer.sport
-                          );
-                        })
-                        .map((stat) => (
-                          <option key={stat.id} value={stat.id}>
-                            {stat.name} ({stat.numId})
-                          </option>
-                        ))}
-                    </select>
+                      placeholder="Select stat type"
+                      options={[
+                        {
+                          value: "",
+                          label: "Select stat type",
+                          disabled: true,
+                        },
+                        ...statTypes
+                          .filter((st) => {
+                            const selectedPlayer = players.find(
+                              (p) => p.id === newLine.playerId
+                            );
+                            return (
+                              !selectedPlayer ||
+                              st.sport === selectedPlayer.sport
+                            );
+                          })
+                          .map((stat) => ({
+                            value: stat.id,
+                            label: `${stat.name} (${stat.numId})`,
+                            icon: "📊",
+                          })),
+                      ]}
+                      searchable={true}
+                    />
                   </div>
 
                   <div>
@@ -1156,18 +1158,12 @@ function AdminPageContent() {
                 </div>
 
                 <div>
-                  <select
+                  <SportsDropdown
                     value={selectedSport}
-                    onChange={(e) => setSelectedSport(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
-                  >
-                    <option value="all">All Sports</option>
-                    {sports.map((sport) => (
-                      <option key={sport.name} value={sport.name}>
-                        {sport.icon} {sport.name}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={setSelectedSport}
+                    includeAll={true}
+                    placeholder="Filter by sport"
+                  />
                 </div>
               </div>
 
@@ -1262,18 +1258,12 @@ function AdminPageContent() {
                 </div>
 
                 <div>
-                  <select
+                  <SportsDropdown
                     value={selectedSport}
-                    onChange={(e) => setSelectedSport(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
-                  >
-                    <option value="all">All Sports</option>
-                    {sports.map((sport) => (
-                      <option key={sport.name} value={sport.name}>
-                        {sport.icon} {sport.name}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={setSelectedSport}
+                    includeAll={true}
+                    placeholder="Filter by sport"
+                  />
                 </div>
               </div>
 
