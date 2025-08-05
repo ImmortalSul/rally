@@ -39,9 +39,12 @@ interface Line {
   value: number;
   sport: string;
   gameTime: string;
+  gameDate?: Date; // Optional for backwards compatibility
   status: "active" | "resolved" | "cancelled";
   overOdds: string;
   underOdds: string;
+  actualValue?: number; // The actual stat value when resolving
+  resolutionReason?: string; // Why it was resolved this way
 }
 
 interface Game {
@@ -238,6 +241,7 @@ function AdminPageContent() {
     sport: "",
     sportCode: "",
     lineCode: "",
+    numId: "",
   });
 
   const [newPlayer, setNewPlayer] = useState({
@@ -253,12 +257,20 @@ function AdminPageContent() {
     statTypeId: "",
     value: "",
     gameTime: "",
+    gameDate: "",
     overOdds: "",
     underOdds: "",
   });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSport, setSelectedSport] = useState("all");
+
+  // Resolution state for lines
+  const [resolvingLine, setResolvingLine] = useState<string | null>(null);
+  const [resolutionData, setResolutionData] = useState({
+    actualValue: "",
+    resolutionReason: "",
+  });
 
   // Helper functions
   const generateNextLineCode = (sportCode: string): string => {
@@ -279,8 +291,25 @@ function AdminPageContent() {
     const sport = sports.find((s) => s.name === newStatType.sport);
     if (!sport) return;
 
-    const lineCode = generateNextLineCode(sport.code);
-    const numId = `${sport.code}-${lineCode}`;
+    let numId = newStatType.numId;
+    let sportCode = sport.code;
+    let lineCode = "";
+
+    // If manual numerical code is provided, validate and parse it
+    if (newStatType.numId.trim()) {
+      const parts = newStatType.numId.split('-');
+      if (parts.length !== 2) {
+        addToast("Numerical code must be in format: 00001-00001", "error");
+        return;
+      }
+      sportCode = parts[0];
+      lineCode = parts[1];
+      numId = newStatType.numId;
+    } else {
+      // Auto-generate if not provided
+      lineCode = generateNextLineCode(sport.code);
+      numId = `${sport.code}-${lineCode}`;
+    }
 
     const statType: StatType = {
       id: String(statTypes.length + 1),
@@ -288,7 +317,7 @@ function AdminPageContent() {
       description: newStatType.description,
       numId: numId,
       sport: newStatType.sport,
-      sportCode: sport.code,
+      sportCode: sportCode,
       lineCode: lineCode,
     };
 
@@ -299,6 +328,7 @@ function AdminPageContent() {
       sport: "",
       sportCode: "",
       lineCode: "",
+      numId: "",
     });
     addToast("Stat type created successfully!", "success");
   };
@@ -346,6 +376,7 @@ function AdminPageContent() {
       !newLine.statTypeId ||
       !newLine.value ||
       !newLine.gameTime ||
+      !newLine.gameDate ||
       !newLine.overOdds ||
       !newLine.underOdds
     ) {
@@ -357,6 +388,13 @@ function AdminPageContent() {
     const statType = statTypes.find((st) => st.id === newLine.statTypeId);
     if (!player || !statType) return;
 
+    // Parse the date
+    const gameDate = new Date(newLine.gameDate);
+    if (isNaN(gameDate.getTime())) {
+      addToast("Please enter a valid date and time", "error");
+      return;
+    }
+
     const line: Line = {
       id: String(lines.length + 1),
       playerId: newLine.playerId,
@@ -366,6 +404,7 @@ function AdminPageContent() {
       value: parseFloat(newLine.value),
       sport: player.sport,
       gameTime: newLine.gameTime,
+      gameDate: gameDate,
       status: "active",
       overOdds: newLine.overOdds,
       underOdds: newLine.underOdds,
@@ -377,6 +416,7 @@ function AdminPageContent() {
       statTypeId: "",
       value: "",
       gameTime: "",
+      gameDate: "",
       overOdds: "",
       underOdds: "",
     });
@@ -385,20 +425,77 @@ function AdminPageContent() {
 
   const handleResolveLine = (
     lineId: string,
-    result: "over" | "under" | "cancel"
+    actualValue: number,
+    result: "over" | "under" | "cancel",
+    resolutionReason?: string
   ) => {
+    if (result === "cancel") {
+      setLines(
+        lines.map((line) =>
+          line.id === lineId
+            ? {
+                ...line,
+                status: "cancelled",
+                resolutionReason: resolutionReason || "Cancelled by admin",
+              }
+            : line
+        )
+      );
+      addToast("Line cancelled successfully!", "success");
+      return;
+    }
+
+    const line = lines.find((l) => l.id === lineId);
+    if (!line) return;
+
+    // Validation logic
+    const shouldBeOver = actualValue > line.value;
+    const shouldBeUnder = actualValue < line.value;
+    const isPush = actualValue === line.value;
+
+    if (isPush) {
+      addToast(
+        `Actual value ${actualValue} equals line value ${line.value}. This should be a push, not resolved as ${result.toUpperCase()}`,
+        "error"
+      );
+      return;
+    }
+
+    if (result === "over" && !shouldBeOver) {
+      addToast(
+        `Error: Actual value ${actualValue} is under the line value ${line.value}. Cannot resolve as OVER.`,
+        "error"
+      );
+      return;
+    }
+
+    if (result === "under" && !shouldBeUnder) {
+      addToast(
+        `Error: Actual value ${actualValue} is over the line value ${line.value}. Cannot resolve as UNDER.`,
+        "error"
+      );
+      return;
+    }
+
     setLines(
-      lines.map((line) =>
-        line.id === lineId
-          ? { ...line, status: result === "cancel" ? "cancelled" : "resolved" }
-          : line
+      lines.map((l) =>
+        l.id === lineId
+          ? {
+              ...l,
+              status: "resolved",
+              actualValue,
+              resolutionReason:
+                resolutionReason ||
+                `Resolved as ${result.toUpperCase()}: actual ${actualValue} vs line ${line.value}`,
+            }
+          : l
       )
     );
-    const message =
-      result === "cancel"
-        ? "Line cancelled successfully!"
-        : `Line resolved as ${result.toUpperCase()} successfully!`;
-    addToast(message, "success");
+
+    addToast(
+      `Line resolved as ${result.toUpperCase()} successfully! (${actualValue} vs ${line.value})`,
+      "success"
+    );
   };
 
   const handleResolveGame = (gameId: string, action: "end" | "cancel") => {
@@ -567,6 +664,24 @@ function AdminPageContent() {
                       rows={3}
                       className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all resize-none"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-white font-semibold mb-2">
+                      Numerical Code (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={newStatType.numId}
+                      onChange={(e) =>
+                        setNewStatType({ ...newStatType, numId: e.target.value })
+                      }
+                      placeholder="e.g., 00001-00001"
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all font-mono"
+                    />
+                    <p className="text-slate-400 text-xs mt-1">
+                      Enter the specific numerical ID (e.g., 00001-00001) or leave blank to auto-generate
+                    </p>
                   </div>
 
                   <div>
@@ -1081,7 +1196,21 @@ function AdminPageContent() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-white font-semibold mb-2">
-                      Game Time
+                      Game Date & Time
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={newLine.gameDate}
+                      onChange={(e) =>
+                        setNewLine({ ...newLine, gameDate: e.target.value })
+                      }
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-white font-semibold mb-2">
+                      Game Description
                     </label>
                     <input
                       type="text"
@@ -1089,7 +1218,7 @@ function AdminPageContent() {
                       onChange={(e) =>
                         setNewLine({ ...newLine, gameTime: e.target.value })
                       }
-                      placeholder="e.g., Tonight 8:00 PM"
+                      placeholder="e.g., Lakers vs Warriors - 4th Quarter"
                       className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
                     />
                   </div>
@@ -1172,62 +1301,312 @@ function AdminPageContent() {
                 {filteredLines.map((line) => (
                   <div
                     key={line.id}
-                    className="bg-slate-700/30 rounded-xl p-4 hover:bg-slate-700/50 transition-colors"
+                    className="bg-slate-700/30 rounded-xl p-6 hover:bg-slate-700/50 transition-colors border border-slate-600/20"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
+                    <div className="space-y-4">
+                      {/* Line Header */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
                           <span className="text-lg">
                             {sports.find((s) => s.name === line.sport)?.icon}
                           </span>
-                          <h4 className="text-white font-semibold">
+                          <h4 className="text-white font-semibold text-lg">
                             {line.playerName}
                           </h4>
                           <span
-                            className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                            className={`px-3 py-1 rounded-full text-xs font-semibold ${
                               line.status === "active"
-                                ? "bg-[#00CED1]/20 text-[#00CED1]"
+                                ? "bg-[#00CED1]/20 text-[#00CED1] border border-[#00CED1]/30"
                                 : line.status === "resolved"
-                                  ? "bg-[#FFAB91]/20 text-[#FFAB91]"
-                                  : "bg-red-500/20 text-red-400"
+                                  ? "bg-[#FFAB91]/20 text-[#FFAB91] border border-[#FFAB91]/30"
+                                  : "bg-red-500/20 text-red-400 border border-red-400/30"
                             }`}
                           >
                             {line.status}
                           </span>
                         </div>
-                        <div className="text-slate-300 mb-2">
-                          {line.statName}:{" "}
-                          <span className="text-[#FFAB91] font-bold">
+                        <div className="text-right">
+                          <div className="text-sm text-slate-400">
+                            Line Value
+                          </div>
+                          <div className="text-xl font-bold text-[#FFAB91]">
                             {line.value}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-4 text-sm text-slate-400">
-                          <span>Over: {line.overOdds}</span>
-                          <span>Under: {line.underOdds}</span>
-                          <span>{line.gameTime}</span>
+                          </div>
                         </div>
                       </div>
 
+                      {/* Line Details */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-slate-800/30 rounded-lg">
+                        <div>
+                          <div className="text-sm text-slate-400">
+                            Stat Type
+                          </div>
+                          <div className="text-white font-semibold">
+                            {line.statName}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-slate-400">Odds</div>
+                          <div className="text-white">
+                            Over:{" "}
+                            <span className="text-[#00CED1]">
+                              {line.overOdds}
+                            </span>{" "}
+                            | Under:{" "}
+                            <span className="text-[#FFAB91]">
+                              {line.underOdds}
+                            </span>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-slate-400">Game</div>
+                          <div className="text-white font-semibold">
+                            {line.gameTime}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Resolution Status or Input */}
+                      {line.status === "resolved" && (
+                        <div className="p-4 bg-gradient-to-r from-[#FFAB91]/10 to-[#00CED1]/10 border border-[#FFAB91]/30 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="text-sm text-slate-300">
+                                Resolved Value
+                              </div>
+                              <div className="text-lg font-bold text-[#FFAB91]">
+                                {line.actualValue} (Line was {line.value})
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-sm text-slate-300">
+                                Result
+                              </div>
+                              <div
+                                className={`font-bold ${
+                                  line.actualValue! > line.value
+                                    ? "text-[#00CED1]"
+                                    : "text-[#FFAB91]"
+                                }`}
+                              >
+                                {line.actualValue! > line.value
+                                  ? "OVER"
+                                  : line.actualValue! < line.value
+                                    ? "UNDER"
+                                    : "PUSH"}
+                              </div>
+                            </div>
+                          </div>
+                          {line.resolutionReason && (
+                            <div className="mt-2 text-sm text-slate-400">
+                              {line.resolutionReason}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {line.status === "cancelled" && (
+                        <div className="p-4 bg-red-500/10 border border-red-400/30 rounded-lg">
+                          <div className="text-red-400 font-semibold">
+                            Line Cancelled
+                          </div>
+                          {line.resolutionReason && (
+                            <div className="mt-1 text-sm text-slate-400">
+                              {line.resolutionReason}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       {line.status === "active" && (
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleResolveLine(line.id, "over")}
-                            className="px-4 py-2 bg-[#00CED1] hover:bg-[#00CED1]/90 text-white font-semibold rounded-lg transition-colors"
-                          >
-                            Over
-                          </button>
-                          <button
-                            onClick={() => handleResolveLine(line.id, "under")}
-                            className="px-4 py-2 bg-[#FFAB91] hover:bg-[#FFAB91]/90 text-white font-semibold rounded-lg transition-colors"
-                          >
-                            Under
-                          </button>
-                          <button
-                            onClick={() => handleResolveLine(line.id, "cancel")}
-                            className="px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white font-semibold rounded-lg transition-colors"
-                          >
-                            Cancel
-                          </button>
+                        <div className="border-t border-slate-600/30 pt-4">
+                          {resolvingLine === line.id ? (
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                  <label className="block text-white font-semibold mb-2">
+                                    Actual {line.statName} Value
+                                  </label>
+                                  <input
+                                    type="number"
+                                    step="0.1"
+                                    value={resolutionData.actualValue}
+                                    onChange={(e) =>
+                                      setResolutionData({
+                                        ...resolutionData,
+                                        actualValue: e.target.value,
+                                      })
+                                    }
+                                    placeholder={`e.g., ${line.value}`}
+                                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
+                                  />
+                                  <div className="mt-1 text-sm text-slate-400">
+                                    Line value: {line.value}
+                                  </div>
+                                </div>
+                                <div>
+                                  <label className="block text-white font-semibold mb-2">
+                                    Resolution Reason (Optional)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={resolutionData.resolutionReason}
+                                    onChange={(e) =>
+                                      setResolutionData({
+                                        ...resolutionData,
+                                        resolutionReason: e.target.value,
+                                      })
+                                    }
+                                    placeholder="e.g., Official stats, injury, etc."
+                                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-[#00CED1] focus:border-[#00CED1] transition-all"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="flex flex-wrap gap-3">
+                                <button
+                                  onClick={() => {
+                                    const actualValue = parseFloat(
+                                      resolutionData.actualValue
+                                    );
+                                    if (isNaN(actualValue)) {
+                                      addToast(
+                                        "Please enter a valid actual value",
+                                        "error"
+                                      );
+                                      return;
+                                    }
+                                    handleResolveLine(
+                                      line.id,
+                                      actualValue,
+                                      actualValue > line.value
+                                        ? "over"
+                                        : "under",
+                                      resolutionData.resolutionReason
+                                    );
+                                    setResolvingLine(null);
+                                    setResolutionData({
+                                      actualValue: "",
+                                      resolutionReason: "",
+                                    });
+                                  }}
+                                  disabled={!resolutionData.actualValue}
+                                  className="px-6 py-3 bg-gradient-to-r from-[#00CED1] to-[#FFAB91] hover:from-[#00CED1]/90 hover:to-[#FFAB91]/90 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  Auto Resolve
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    const actualValue = parseFloat(
+                                      resolutionData.actualValue
+                                    );
+                                    if (isNaN(actualValue)) {
+                                      addToast(
+                                        "Please enter a valid actual value",
+                                        "error"
+                                      );
+                                      return;
+                                    }
+                                    handleResolveLine(
+                                      line.id,
+                                      actualValue,
+                                      "over",
+                                      resolutionData.resolutionReason
+                                    );
+                                    setResolvingLine(null);
+                                    setResolutionData({
+                                      actualValue: "",
+                                      resolutionReason: "",
+                                    });
+                                  }}
+                                  className="px-4 py-3 bg-[#00CED1] hover:bg-[#00CED1]/90 text-white font-semibold rounded-xl transition-colors"
+                                >
+                                  Force Over
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    const actualValue = parseFloat(
+                                      resolutionData.actualValue
+                                    );
+                                    if (isNaN(actualValue)) {
+                                      addToast(
+                                        "Please enter a valid actual value",
+                                        "error"
+                                      );
+                                      return;
+                                    }
+                                    handleResolveLine(
+                                      line.id,
+                                      actualValue,
+                                      "under",
+                                      resolutionData.resolutionReason
+                                    );
+                                    setResolvingLine(null);
+                                    setResolutionData({
+                                      actualValue: "",
+                                      resolutionReason: "",
+                                    });
+                                  }}
+                                  className="px-4 py-3 bg-[#FFAB91] hover:bg-[#FFAB91]/90 text-white font-semibold rounded-xl transition-colors"
+                                >
+                                  Force Under
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    handleResolveLine(
+                                      line.id,
+                                      0,
+                                      "cancel",
+                                      resolutionData.resolutionReason ||
+                                        "Cancelled by admin"
+                                    );
+                                    setResolvingLine(null);
+                                    setResolutionData({
+                                      actualValue: "",
+                                      resolutionReason: "",
+                                    });
+                                  }}
+                                  className="px-4 py-3 bg-slate-600 hover:bg-slate-500 text-white font-semibold rounded-xl transition-colors"
+                                >
+                                  Cancel Line
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setResolvingLine(null);
+                                    setResolutionData({
+                                      actualValue: "",
+                                      resolutionReason: "",
+                                    });
+                                  }}
+                                  className="px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-xl transition-colors"
+                                >
+                                  Close
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex space-x-3">
+                              <button
+                                onClick={() => setResolvingLine(line.id)}
+                                className="flex-1 px-4 py-3 bg-gradient-to-r from-[#00CED1] to-[#FFAB91] hover:from-[#00CED1]/90 hover:to-[#FFAB91]/90 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-[1.02]"
+                              >
+                                Resolve Line
+                              </button>
+                              <button
+                                onClick={() => {
+                                  handleResolveLine(
+                                    line.id,
+                                    0,
+                                    "cancel",
+                                    "Quick cancelled by admin"
+                                  );
+                                }}
+                                className="px-6 py-3 bg-slate-600 hover:bg-slate-500 text-white font-semibold rounded-xl transition-colors"
+                              >
+                                Quick Cancel
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
