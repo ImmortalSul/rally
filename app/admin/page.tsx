@@ -1584,62 +1584,6 @@ function AdminPageContent() {
                                 </button>
                                 <button
                                   onClick={() => {
-                                    const actualValue = parseFloat(
-                                      resolutionData.actualValue
-                                    );
-                                    if (isNaN(actualValue)) {
-                                      addToast(
-                                        "Please enter a valid actual value",
-                                        "error"
-                                      );
-                                      return;
-                                    }
-                                    handleResolveLine(
-                                      line.id,
-                                      actualValue,
-                                      "over",
-                                      resolutionData.resolutionReason
-                                    );
-                                    setResolvingLine(null);
-                                    setResolutionData({
-                                      actualValue: "",
-                                      resolutionReason: "",
-                                    });
-                                  }}
-                                  className="px-4 py-3 bg-[#00CED1] hover:bg-[#00CED1]/90 text-white font-semibold rounded-xl transition-colors"
-                                >
-                                  Force Over
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    const actualValue = parseFloat(
-                                      resolutionData.actualValue
-                                    );
-                                    if (isNaN(actualValue)) {
-                                      addToast(
-                                        "Please enter a valid actual value",
-                                        "error"
-                                      );
-                                      return;
-                                    }
-                                    handleResolveLine(
-                                      line.id,
-                                      actualValue,
-                                      "under",
-                                      resolutionData.resolutionReason
-                                    );
-                                    setResolvingLine(null);
-                                    setResolutionData({
-                                      actualValue: "",
-                                      resolutionReason: "",
-                                    });
-                                  }}
-                                  className="px-4 py-3 bg-[#FFAB91] hover:bg-[#FFAB91]/90 text-white font-semibold rounded-xl transition-colors"
-                                >
-                                  Force Under
-                                </button>
-                                <button
-                                  onClick={() => {
                                     handleResolveLine(
                                       line.id,
                                       0,
